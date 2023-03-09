@@ -5,7 +5,7 @@
 class Button
 {
 public:
-    Button();
+    Button(){};
     Button(std::string str, sf::Vector2f buttonSize, int charSize, sf::Color backgroundColor, sf::Color textColor)
     {
         text.setString(str);
