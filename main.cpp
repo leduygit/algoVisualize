@@ -24,6 +24,11 @@ int main(){
     menu.setPos({550, 320});
 
     window.clear(sf::Color::White);
+    int screenID = 1;
+
+    // 1 = Default Menu
+    // 2 = Database Menu
+    // 3 = Setting
 
     while (window.isOpen()){
         sf::Event ev;
@@ -37,11 +42,15 @@ int main(){
             case (sf::Event::MouseMoved):
                 if (menu.checkMenuButton(ev, window))
                     break;
+            case (sf::Event::MouseButtonPressed):
+                screenID = menu.changeScreenID(ev, window, screenID);
+                break;
             default:
                 break;
             }
         }
 
+        cout << screenID << '\n';
         window.clear(sf::Color::White);
         menu.drawMenu(window);
         window.display();
