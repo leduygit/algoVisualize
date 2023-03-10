@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo");
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(144);
 
     sf::Font consolas;
