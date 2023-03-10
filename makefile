@@ -5,14 +5,14 @@ INCLUDE = "$(path)\include"
 LIBRARY = "$(path)\lib"
 CXXFLAGS =
 SFMLFLAGS =
-SOURCE = main
+SOURCE = main.cpp
 SFML_INCLUDE = -lsfml-graphics -lsfml-window -lsfml-system
 #=======================================================================================#
-	
+
 all: compile link run
 compile:
-	g++ -c $(SOURCE).cpp -I\Components\*.hpp -I $(INCLUDE) 
+	g++ -c $(SOURCE) -I $(INCLUDE)
 link:
-	g++ $(CXXFLAGS) $(SOURCE).o -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
+	g++ -I/Components/*. *.cpp -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
 run:
 	./main.exe

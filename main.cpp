@@ -1,27 +1,23 @@
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/Network.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Window.hpp>
-#include "Components/Button.hpp"
 #include "Components/Menu.hpp"
 using namespace std;
+
+inline sf::Font consolas;
+
+
+inline void menuInitialize(Menu &menu){
+    menu.setStart("Start", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
+    menu.setSetting("Setting", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
+    menu.setPos({550, 320});
+}
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(144);
-
-    sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
 
-    Button testButton("Testing", sf::Color::Blue, consolas, {300, 120}, sf::Color::Red);
-    testButton.setPosition({750, 450});
 
     Menu menu;
-    menu.setStart("Start", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
-    menu.setSetting("Setting", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
-
-    menu.setPos({550, 320});
+    menuInitialize(menu);
 
     window.clear(sf::Color::White);
     int screenID = 1;
@@ -43,7 +39,7 @@ int main(){
                 if (menu.checkMenuButton(ev, window))
                     break;
             case (sf::Event::MouseButtonPressed):
-                screenID = menu.changeScreenID(ev, window, screenID);
+                menu.changeScreenID(ev, window, screenID);
                 break;
             default:
                 break;
