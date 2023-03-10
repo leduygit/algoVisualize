@@ -1,16 +1,19 @@
 #ifndef _button_h
 #define _button_h
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <iostream>
 
 class Button
 {
 public:
     Button(){};
-    Button(std::string str, sf::Vector2f buttonSize, int charSize, sf::Color backgroundColor, sf::Color textColor)
+    Button(std::string str, sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
     {
         text.setString(str);
         text.setColor(textColor);
-        text.setCharacterSize(charSize);
+        text.setFont(font);
+        text.setCharacterSize(buttonSize.y / 3);
 
         button.setSize(buttonSize);
         button.setFillColor(backgroundColor);
@@ -31,8 +34,10 @@ public:
     void setPosition(sf::Vector2f pos){
         button.setPosition(pos);
 
-        float xPos = (pos.x + button.getGlobalBounds().width / 4) - (text.getGlobalBounds().width / 3);
-        float yPos = (pos.y + button.getGlobalBounds().height / 4) - (text.getGlobalBounds().height / 3);
+        float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2;
+        float yPos = pos.y + text.getLocalBounds().height;
+        std::cout << text.getLocalBounds().width << ' ' << text.getLocalBounds().height << '\n';
+        //std::cout << xPos << ' ' << yPos << ' ' << pos.x << ' ' << pos.y << '\n';
         text.setPosition({xPos, yPos});
     }
 

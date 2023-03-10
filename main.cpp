@@ -11,13 +11,13 @@ int main(){
     sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
 
-    Button testButton("Testing", {150, 60}, 20, sf::Color::White, sf::Color::Blue);
+    Button testButton("Testing", sf::Color::Blue, consolas, {300, 120}, sf::Color::Red);
     testButton.setPosition({750, 450});
-    testButton.setFont(consolas);
 
-    Button button2("Duy Anh", {300, 150}, 30, sf::Color::White, sf::Color::Blue);
-    button2.setPosition({100, 100});
-    button2.setFont(consolas);
+
+    // Button button2("Duy Anh", {300, 150}, 30, sf::Color::White, sf::Color::Blue);
+    // button2.setPosition({100, 100});
+    // button2.setFont(consolas);
 
     while (window.isOpen()){
         sf::Event ev;
@@ -41,7 +41,6 @@ int main(){
         window.clear();
         //Button testButton;
         testButton.drawButton(window);
-        button2.drawButton(window);
         window.display();
     }
 }
