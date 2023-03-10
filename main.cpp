@@ -9,6 +9,8 @@ using namespace std;
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo");
+    window.setFramerateLimit(144);
+
     sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
 
@@ -16,10 +18,12 @@ int main(){
     testButton.setPosition({750, 450});
 
     Menu menu;
-    menu.setStart("Start", sf::Color::Blue, consolas, {300, 120}, sf::Color::White);
-    menu.setSetting("Setting", sf::Color::Blue, consolas, {300, 120}, sf::Color::White);
+    menu.setStart("Start", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
+    menu.setSetting("Setting", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
 
-    menu.setPos({650, 320});
+    menu.setPos({550, 320});
+
+    window.clear(sf::Color::White);
 
     while (window.isOpen()){
         sf::Event ev;
@@ -38,7 +42,7 @@ int main(){
             }
         }
 
-        window.clear();
+        window.clear(sf::Color::White);
         menu.drawMenu(window);
         window.display();
     }

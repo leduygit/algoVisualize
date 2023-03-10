@@ -12,7 +12,7 @@ public:
 
     void setPos(sf::Vector2f pos){
         startButton.setPosition(pos);
-        settingButton.setPosition({pos.x, pos.y + 140});
+        settingButton.setPosition({pos.x, pos.y + 200});
     }
 
     void setSetting(std::string str, sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor){

@@ -16,7 +16,7 @@ public:
         text.setCharacterSize(buttonSize.y / 3);
 
         button.setOutlineThickness(6);
-        button.setOutlineColor(sf::Color::Green);
+        button.setOutlineColor(sf::Color::Black);
         button.setSize(buttonSize);
         button.setFillColor(backgroundColor);
     }
@@ -60,7 +60,7 @@ public:
 
     bool hoverChangeColor(sf::Event &ev, sf::RenderWindow &window){
         if (this->isMouseOnButton(window)){
-            this->setBackColor(sf::Color::Cyan);
+            this->setBackColor(sf::Color(50, 60, 70));
             return true;
         }
         else
