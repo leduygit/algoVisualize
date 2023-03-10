@@ -15,6 +15,8 @@ public:
         text.setFont(font);
         text.setCharacterSize(buttonSize.y / 3);
 
+        button.setOutlineThickness(6);
+        button.setOutlineColor(sf::Color::Green);
         button.setSize(buttonSize);
         button.setFillColor(backgroundColor);
     }
@@ -34,9 +36,9 @@ public:
     void setPosition(sf::Vector2f pos){
         button.setPosition(pos);
 
-        float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2;
+        float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2.2;
         float yPos = pos.y + text.getLocalBounds().height;
-        std::cout << text.getLocalBounds().width << ' ' << text.getLocalBounds().height << '\n';
+        //std::cout << text.getLocalBounds().width << ' ' << text.getLocalBounds().height << '\n';
         //std::cout << xPos << ' ' << yPos << ' ' << pos.x << ' ' << pos.y << '\n';
         text.setPosition({xPos, yPos});
     }
@@ -54,6 +56,16 @@ public:
         sf::Vector2f buttonSize = button.getSize();
         return (mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + buttonSize.x
              && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + buttonSize.y);
+    }
+
+    bool hoverChangeColor(sf::Event &ev, sf::RenderWindow &window){
+        if (this->isMouseOnButton(window)){
+            this->setBackColor(sf::Color::Cyan);
+            return true;
+        }
+        else
+            this->setBackColor(sf::Color::White);
+        return false;
     }
 private:
     sf::RectangleShape button;

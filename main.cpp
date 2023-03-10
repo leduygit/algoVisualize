@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 #include "Components/Button.hpp"
+#include "Components/Menu.hpp"
 using namespace std;
 
 int main(){
@@ -14,10 +15,11 @@ int main(){
     Button testButton("Testing", sf::Color::Blue, consolas, {300, 120}, sf::Color::Red);
     testButton.setPosition({750, 450});
 
+    Menu menu;
+    menu.setStart("Start", sf::Color::Blue, consolas, {300, 120}, sf::Color::White);
+    menu.setSetting("Setting", sf::Color::Blue, consolas, {300, 120}, sf::Color::White);
 
-    // Button button2("Duy Anh", {300, 150}, 30, sf::Color::White, sf::Color::Blue);
-    // button2.setPosition({100, 100});
-    // button2.setFont(consolas);
+    menu.setPos({650, 320});
 
     while (window.isOpen()){
         sf::Event ev;
@@ -29,18 +31,15 @@ int main(){
                 window.close();
                 break;
             case (sf::Event::MouseMoved):
-                if (testButton.isMouseOnButton(window))
-                    testButton.setBackColor(sf::Color::Green);
-                else
-                    testButton.setBackColor(sf::Color::White);
+                if (menu.checkMenuButton(ev, window))
+                    break;
             default:
                 break;
             }
         }
 
         window.clear();
-        //Button testButton;
-        testButton.drawButton(window);
+        menu.drawMenu(window);
         window.display();
     }
 }
