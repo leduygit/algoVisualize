@@ -1,24 +1,25 @@
-#include "Components/Menu.hpp"
+#include "Menu.hpp"
 using namespace std;
 
-inline sf::Font consolas;
-
-
-inline void menuInitialize(Menu &menu){
-    menu.setStart("Start", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
-    menu.setSetting("Setting", sf::Color(90, 200, 200), consolas, {500, 120}, sf::Color::White);
+void menuInitialize(Menu &menu, sf::Font &font)
+{
+    sf::Vector2f menuButtonSize(500.f, 120.f);
+    sf::Color textColor(90, 200, 200);
+    menu.setStart("Start", textColor, font, menuButtonSize, sf::Color::White);
+    menu.setSetting("Setting", textColor, font, menuButtonSize, sf::Color::White);
     menu.setPos({550, 320});
 }
 
-int main(){
+int main()
+{
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(144);
+
+    sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
 
-
     Menu menu;
-    menuInitialize(menu);
-
+    menuInitialize(menu, consolas);
     window.clear(sf::Color::White);
     int screenID = 1;
 
@@ -26,7 +27,8 @@ int main(){
     // 2 = Database Menu
     // 3 = Setting
 
-    while (window.isOpen()){
+    while (window.isOpen())
+    {
         sf::Event ev;
         while (window.pollEvent(ev))
         {

@@ -1,4 +1,11 @@
-#include "Components/Menu.hpp"
+#include "Menu.hpp"
+
+void Menu::setMenuFont(sf::Font &font)
+{
+    startButton.setTextFont(font);
+    settingButton.setTextFont(font);
+}
+
 void Menu::setStart(std::string str, sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     startButton = Button(str, textColor, font, buttonSize, backgroundColor);

@@ -11,8 +11,8 @@ SFML_INCLUDE = -lsfml-graphics -lsfml-window -lsfml-system
 
 all: compile link run
 compile:
-	g++ -c $(SOURCE) -I $(INCLUDE)
+	g++ -c Button.hpp Menu.hpp *.cpp -I $(INCLUDE)
 link:
-	g++ -I/Components/*. *.cpp -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
+	g++  *.cpp -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
 run:
 	./main.exe
