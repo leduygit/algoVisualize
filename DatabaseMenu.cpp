@@ -48,7 +48,6 @@ void DatabaseMenu::setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Ve
 }
 
 
-
 void DatabaseMenu::drawDatabaseMenu(sf::RenderWindow &window)
 {
     staticArrayButton.drawButton(window);
