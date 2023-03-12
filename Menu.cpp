@@ -50,3 +50,27 @@ void Menu::changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &currentS
         currentScreenID = 3; // 3 = setting the application
     return;
 }
+
+void Menu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+{
+    while (window.pollEvent(ev))
+    {
+        switch (ev.type)
+        {
+        case (sf::Event::Closed):
+            window.close();
+            break;
+        case (sf::Event::MouseMoved):
+            this->checkMenuButton(ev, window);
+            break;
+        case (sf::Event::MouseButtonPressed):
+            this->changeScreenID(ev, window, screenID);
+            break;
+        default:
+            break;
+        }
+    }
+
+    window.clear(sf::Color::White);
+    this->drawMenu(window);
+}

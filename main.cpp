@@ -14,7 +14,7 @@ void menuInitialize(Menu &menu, sf::Font &font)
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
-    window.setFramerateLimit(144);
+    window.setFramerateLimit(60);
 
     sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
@@ -39,29 +39,18 @@ int main()
     while (window.isOpen())
     {
         sf::Event ev;
-        while (window.pollEvent(ev))
+        
+        switch (screenID)
         {
-            switch (ev.type)
-            {
-            case (sf::Event::Closed):
-                window.close();
-                break;
-            // case (sf::Event::MouseMoved):
-            //     if (menu.checkMenuButton(ev, window))
-            //         break;
-            // case (sf::Event::MouseButtonPressed):
-            //     menu.changeScreenID(ev, window, screenID);
-            //     break;
-            // default:
-            //     break;
-            // 
-            }
+        case 1:
+            menu.handleEvent(ev, window, screenID);
+            break;
+        default:
+            dataMenu.handleEvent(ev, window, screenID);
+            break;
         }
 
         cout << screenID << '\n';
-        window.clear(sf::Color::White);
-        //menu.drawMenu(window);
-        dataMenu.drawDatabaseMenu(window);
         window.display();
     }
 }

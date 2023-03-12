@@ -14,6 +14,9 @@ public:
     void setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     void drawDatabaseMenu(sf::RenderWindow &window);
     void setPosition(sf::Vector2f pos);
+    bool checkMenuButton(sf::Event &ev, sf::RenderWindow &window);
+    void changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &screenID);
+    void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID);
 private:
     Button staticArrayButton = Button(); // ID = 4
     Button dynamicArrayButton = Button(); // ID = 5

@@ -77,3 +77,52 @@ void DatabaseMenu::setPosition(sf::Vector2f pos)
     stackButton.setPosition({260 + pos.x, pos.y + 280});
     queueButton.setPosition({260 + pos.x + 500, pos.y + 280});
 }
+
+bool DatabaseMenu::checkMenuButton(sf::Event &ev, sf::RenderWindow &window)
+{
+    if (backButton.hoverChangeColor(ev, window)) return true;
+    if (staticArrayButton.hoverChangeColor(ev, window)) return true;
+    if (dynamicArrayButton.hoverChangeColor(ev, window)) return true;
+    if (singlyLinkedListButton.hoverChangeColor(ev, window)) return true;
+    if (doublyLinkedListButton.hoverChangeColor(ev, window)) return true;
+    if (circularLinkedListButton.hoverChangeColor(ev, window)) return true;
+    if (stackButton.hoverChangeColor(ev, window)) return true;
+    if (queueButton.hoverChangeColor(ev, window)) return true;
+    return false;
+}
+
+void DatabaseMenu::changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+{
+    if (staticArrayButton.isMouseOnButton(window)) screenID = 4;
+    else if (dynamicArrayButton.isMouseOnButton(window)) screenID = 5;
+    else if (singlyLinkedListButton.isMouseOnButton(window)) screenID = 6;
+    else if (doublyLinkedListButton.isMouseOnButton(window)) screenID = 7;
+    else if (circularLinkedListButton.isMouseOnButton(window)) screenID = 8;
+    else if (stackButton.isMouseOnButton(window)) screenID = 9;
+    else if (queueButton.isMouseOnButton(window)) screenID = 10;
+    else if (backButton.isMouseOnButton(window)) screenID = 1;
+    return;
+}
+
+void DatabaseMenu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+{
+    while (window.pollEvent(ev))
+    {
+        switch (ev.type)
+        {
+        case (sf::Event::Closed):
+            window.close();
+            break;
+        case (sf::Event::MouseMoved):
+            if (this->checkMenuButton(ev, window))
+                break;
+        case (sf::Event::MouseButtonPressed):
+            this->changeScreenID(ev, window, screenID);
+        default:
+            break;
+        }
+    }
+
+    window.clear(sf::Color::White);
+    this->drawDatabaseMenu(window);
+}
