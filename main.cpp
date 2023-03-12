@@ -1,4 +1,5 @@
 #include "Menu.hpp"
+#include "DatabaseMenu.hpp"
 using namespace std;
 
 void menuInitialize(Menu &menu, sf::Font &font)
@@ -18,10 +19,18 @@ int main()
     sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
 
+    // Main menu setup
     Menu menu;
     menuInitialize(menu, consolas);
     window.clear(sf::Color::White);
     int screenID = 1;
+
+    // database Menu setup
+    sf::Vector2f menuButtonSize(460.f, 110.f);
+    sf::Color textColor(90, 200, 200);
+    DatabaseMenu dataMenu;
+    dataMenu.setupDatabaseMenu(textColor, consolas, menuButtonSize, sf::Color::White);
+    dataMenu.setPosition({30, 280});
 
     // 1 = Default Menu
     // 2 = Database Menu
@@ -37,20 +46,22 @@ int main()
             case (sf::Event::Closed):
                 window.close();
                 break;
-            case (sf::Event::MouseMoved):
-                if (menu.checkMenuButton(ev, window))
-                    break;
-            case (sf::Event::MouseButtonPressed):
-                menu.changeScreenID(ev, window, screenID);
-                break;
-            default:
-                break;
+            // case (sf::Event::MouseMoved):
+            //     if (menu.checkMenuButton(ev, window))
+            //         break;
+            // case (sf::Event::MouseButtonPressed):
+            //     menu.changeScreenID(ev, window, screenID);
+            //     break;
+            // default:
+            //     break;
+            // 
             }
         }
 
         cout << screenID << '\n';
         window.clear(sf::Color::White);
-        menu.drawMenu(window);
+        //menu.drawMenu(window);
+        dataMenu.drawDatabaseMenu(window);
         window.display();
     }
 }

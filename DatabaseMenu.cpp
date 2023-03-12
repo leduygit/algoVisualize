@@ -44,7 +44,7 @@ void DatabaseMenu::setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Ve
     circularLinkedListButton = Button("Circular Linked List", textColor, font, buttonSize, backgroundColor);
     stackButton = Button("Stack", textColor, font, buttonSize, backgroundColor);
     queueButton = Button("Queue", textColor, font, buttonSize, backgroundColor);
-    backButton = Button("Return", textColor, font, buttonSize, backgroundColor);
+    backButton = Button("Return", textColor, font, {buttonSize.x - 200, buttonSize.y}, backgroundColor);
 }
 
 
@@ -58,4 +58,22 @@ void DatabaseMenu::drawDatabaseMenu(sf::RenderWindow &window)
     stackButton.drawButton(window);
     queueButton.drawButton(window);
     backButton.drawButton(window);
+}
+
+void DatabaseMenu::setPosition(sf::Vector2f pos)
+{
+    backButton.setPosition({30, 40});
+
+    //first line
+    staticArrayButton.setPosition({260 + pos.x, pos.y});
+    dynamicArrayButton.setPosition({260 + pos.x + 500, pos.y});
+
+    // second line
+    singlyLinkedListButton.setPosition({pos.x, pos.y + 140});
+    doublyLinkedListButton.setPosition({pos.x + 500, pos.y + 140});
+    circularLinkedListButton.setPosition({pos.x + 1000, pos.y + 140});
+
+    // third line
+    stackButton.setPosition({260 + pos.x, pos.y + 280});
+    queueButton.setPosition({260 + pos.x + 500, pos.y + 280});
 }
