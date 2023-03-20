@@ -2,6 +2,8 @@
 #define _menu_h
 #include <SFML/Graphics.hpp>
 #include "Button.hpp"
+
+// main menu ID = 1
 class Menu
 {
 public:

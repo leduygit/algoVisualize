@@ -4,16 +4,15 @@
             "name": "windows-gcc-x64",
             "includePath": [
                 "${workspaceFolder}/**",
+                "C:\\SFML-2.5.1\\include",
                 "C:/msys64/mingw64/include/c++/12.2.0",
                 "C:\\msys64\\mingw64\\include\\c++\\12.2.0\\backward",
                 "C:\\msys64\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\12.2.0\\include",
                 "C:\\msys64\\mingw64\\include",
                 "C:\\msys64\\mingw64\\lib\\gcc\\x86_64-w64-mingw32\\12.2.0\\include-fixed",
                 "C:/msys64/mingw64/include",
-                "C:/msys64/mingw64/include/c++/12.2.0",
                 "C:/msys64/mingw64/include/c++/12.2.0/tr1",
-                "C:/msys64/mingw64/include/c++/12.2.0/x86_64-w64-mingw32",
-                "C:\\SFML-2.5.1\\include"
+                "C:/msys64/mingw64/include/c++/12.2.0/x86_64-w64-mingw32"
             ],
             "defines": [
                 "_DEBUG",
@@ -23,7 +22,7 @@
             "cStandard": "${default}",
             "cppStandard": "${default}",
             "intelliSenseMode": "windows-gcc-x64",
-            "compilerPath": "C:/mingw64/bin/gcc.exe"
+            "compilerPath": "C:/msys64/mingw64/bin/gcc.exe"
         }
     ],
     "version": 4

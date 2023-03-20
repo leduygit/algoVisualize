@@ -44,7 +44,7 @@ void DatabaseMenu::setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Ve
     circularLinkedListButton = Button("Circular Linked List", textColor, font, buttonSize, backgroundColor);
     stackButton = Button("Stack", textColor, font, buttonSize, backgroundColor);
     queueButton = Button("Queue", textColor, font, buttonSize, backgroundColor);
-    backButton = Button("Return", textColor, font, {buttonSize.x - 200, buttonSize.y}, backgroundColor);
+    backButton = Button("Return", textColor, font, {buttonSize.x - 280, buttonSize.y - 50}, backgroundColor);
 }
 
 

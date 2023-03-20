@@ -1,6 +1,8 @@
 #ifndef _database_h
 #define _database_h
 #include "Button.hpp"
+
+// Database Menu ID = 2
 class DatabaseMenu{
 public:
     DatabaseMenu() {};

@@ -1,5 +1,7 @@
 #include "Menu.hpp"
 #include "DatabaseMenu.hpp"
+#include "arrowLine.hpp"
+#include <math.h>
 using namespace std;
 
 void menuInitialize(Menu &menu, sf::Font &font)
@@ -15,6 +17,8 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
+
+    sf::VertexArray lines(sf::Lines, 3);
 
     sf::Font consolas;
     consolas.loadFromFile("Font/Consolas.ttf");
@@ -36,10 +40,12 @@ int main()
     // 2 = Database Menu
     // 3 = Setting
 
+    double pi = acos(-1);
+
     while (window.isOpen())
     {
         sf::Event ev;
-        
+
         switch (screenID)
         {
         case 1:
@@ -51,6 +57,11 @@ int main()
         }
 
         cout << screenID << '\n';
+
+        
+        //circle.rotate(90);
+        window.draw(circle);
+
         window.display();
     }
 }
