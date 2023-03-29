@@ -1,8 +1,6 @@
 #include "Menu.hpp"
 #include "DatabaseMenu.hpp"
-#include "arrowLine.hpp"
-#include <math.h>
-using namespace std;
+#include "ArrowLine.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -40,7 +38,12 @@ int main()
     // 2 = Database Menu
     // 3 = Setting
 
-    double pi = acos(-1);
+    ArrowShape arrow(100.f, 5.f, 10.f, 20.f);
+    arrow.setOutlineThickness(3.f);
+    arrow.setPosition({50, 50});
+    arrow.setOutlineColor(sf::Color::Black);
+    arrow.setColor(sf::Color::Cyan);
+    arrow.setRotation(67);
 
     while (window.isOpen())
     {
@@ -56,12 +59,8 @@ int main()
             break;
         }
 
-        cout << screenID << '\n';
-
-        
-        //circle.rotate(90);
-        window.draw(circle);
-
+        window.draw(arrow);
+        std::cout << screenID << '\n';
         window.display();
     }
 }
