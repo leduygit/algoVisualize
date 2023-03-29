@@ -1,2 +1,3 @@
-Button.hpp.gch
 *.o
+*.exe
+*.gch
