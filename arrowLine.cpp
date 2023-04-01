@@ -40,3 +40,4 @@ void ArrowShape::setOutlineThickness(float thickness)
     m_arrowTip.setOutlineThickness(thickness);
 }
 
+

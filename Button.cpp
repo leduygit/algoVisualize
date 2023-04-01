@@ -31,6 +31,8 @@ void Button::setPosition(sf::Vector2f pos)
 {
     button.setPosition(pos);
 
+
+    // can giua
     float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2.2;
     float yPos = pos.y + text.getLocalBounds().height;
 

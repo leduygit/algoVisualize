@@ -1,6 +1,7 @@
 #include "Menu.hpp"
 #include "DatabaseMenu.hpp"
 #include "ArrowLine.hpp"
+#include "LLNode.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -38,12 +39,16 @@ int main()
     // 2 = Database Menu
     // 3 = Setting
 
-    ArrowShape arrow(100.f, 5.f, 10.f, 20.f);
-    arrow.setOutlineThickness(3.f);
-    arrow.setPosition({50, 50});
-    arrow.setOutlineColor(sf::Color::Black);
-    arrow.setColor(sf::Color::Cyan);
-    arrow.setRotation(67);
+    // ArrowShape arrow(100.f, 5.f, 10.f, 20.f);
+    // arrow.setOutlineThickness(3.f);
+    // arrow.setPosition({100, 100});
+    // arrow.setOutlineColor(sf::Color::Black);
+    // arrow.setColor(sf::Color::Cyan);
+    // arrow.setRotation(140);
+
+    LLNode test("123", sf::Color::Black, consolas, 30.f, sf::Color::White);
+    test.setPosition({50, 50});
+
 
     while (window.isOpen())
     {
@@ -59,8 +64,9 @@ int main()
             break;
         }
 
-        window.draw(arrow);
-        std::cout << screenID << '\n';
+        test.draw(window);
+        //window.draw(arrow);
+        //std::cout << screenID << '\n';
         window.display();
     }
 }
