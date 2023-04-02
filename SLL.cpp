@@ -62,30 +62,96 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         case (sf::Event::Closed):
             window.close();
             break;
+        case (sf::Event::MouseMoved):
+            checkHover(ev, window);
+            break;
+        case (sf::Event::MouseButtonPressed):
+            if (ev.mouseButton.button == sf::Mouse::Left)
+                mouseClicked(ev, window, screenID);
+            break;
         default:
             break;
         }
+    }
 
-        window.clear(sf::Color::White);
-        create.drawButton(window);
-        search.drawButton(window);
-        insert.drawButton(window);
-        remove.drawButton(window);
+    window.clear(sf::Color::White);
+    create.drawButton(window);
+    search.drawButton(window);
+    insert.drawButton(window);
+    remove.drawButton(window);
 
-        if (drawSubCreate)
-            for (int i = 0; i < 4; ++i)
-                subCreateButton[i].drawButton(window);
+    if (drawSubCreate)
+        for (int i = 0; i < 4; ++i)
+            subCreateButton[i].drawButton(window);
 
-        if (drawSubSearch)
-            for (int i = 0; i < 1; ++i)
-                subSearchButton[i].drawButton(window);
+    if (drawSubSearch)
+        for (int i = 0; i < 1; ++i)
+            subSearchButton[i].drawButton(window);
 
-        if (drawSubInsert)
-            for (int i = 0; i < 3; ++i)
-                subInsertButton[i].drawButton(window);
+    if (drawSubInsert)
+        for (int i = 0; i < 3; ++i)
+            subInsertButton[i].drawButton(window);
 
-        if (drawSubRemove)
-            for (int i = 0; i < 3; ++i)
-                subRemoveButton[i].drawButton(window);
+    if (drawSubRemove)
+        for (int i = 0; i < 3; ++i)
+            subRemoveButton[i].drawButton(window);
+}
+
+bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
+{
+    if (create.hoverChangeColor(ev, window))
+        return true;
+    if (search.hoverChangeColor(ev, window))
+        return true;
+    if (insert.hoverChangeColor(ev, window))
+        return true;
+    if (remove.hoverChangeColor(ev, window))
+        return true;
+
+    if (drawSubCreate)
+        for (int i = 0; i < 4; ++i)
+            if (subCreateButton[i].hoverChangeColor(ev, window))
+                return true;
+
+    if (drawSubSearch)
+        for (int i = 0; i < 1; ++i)
+            if (subSearchButton[i].hoverChangeColor(ev, window))
+                return true;
+
+    if (drawSubInsert)
+        for (int i = 0; i < 3; ++i)
+            if (subInsertButton[i].hoverChangeColor(ev, window))
+                return true;
+
+    if (drawSubRemove)
+        for (int i = 0; i < 3; ++i)
+            if (subInsertButton[i].hoverChangeColor(ev, window))
+                return true;
+
+    return false;
+}
+
+void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+{
+    // if (ev.type != sf::Event::MouseButtonReleased) return;
+    if (create.isMouseOnButton(window))
+    {
+        drawSubCreate = !drawSubCreate;
+        drawSubInsert = drawSubRemove = drawSubSearch = 0;
+    }
+    else if (search.isMouseOnButton(window))
+    {
+        drawSubSearch = !drawSubSearch;
+        drawSubCreate = drawSubInsert = drawSubRemove = 0;
+    }
+    else if (insert.isMouseOnButton(window))
+    {
+        drawSubInsert = !drawSubInsert;
+        drawSubCreate = drawSubSearch = drawSubRemove = 0;
+    }
+    else if (remove.isMouseOnButton(window))
+    {
+        drawSubRemove = !drawSubRemove;
+        drawSubCreate = drawSubInsert = drawSubSearch = 0;
     }
 }

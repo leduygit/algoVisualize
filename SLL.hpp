@@ -9,6 +9,8 @@ class SLL
 public:
     SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID);
+    bool checkHover(sf::Event &ev, sf::RenderWindow &window);
+    void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
 private:
     Button create, search, insert, remove;
 

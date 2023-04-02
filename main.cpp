@@ -74,7 +74,7 @@ int main()
             break;
         }
 
-        test.draw(window);
+        //test.draw(window);
         //window.draw(arrow);
         //std::cout << screenID << '\n';
         window.display();

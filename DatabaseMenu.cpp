@@ -118,6 +118,7 @@ void DatabaseMenu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &scr
                 break;
         case (sf::Event::MouseButtonPressed):
             this->changeScreenID(ev, window, screenID);
+            break;
         default:
             break;
         }
