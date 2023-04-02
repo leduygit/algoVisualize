@@ -7,6 +7,7 @@ public:
     LLNode(){};
     LLNode(std::string str, sf::Color numColor, sf::Font &font, float radius, sf::Color backgroundColor);
     void setPosition(sf::Vector2f pos);
+    void setString(std::string str);
     void draw(sf::RenderWindow &window);
     sf::Vector2f getCenter();
 

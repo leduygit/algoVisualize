@@ -15,6 +15,7 @@ void menuInitialize(Menu &menu, sf::Font &font)
 
 int main()
 {
+    srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
@@ -53,8 +54,6 @@ int main()
     // arrow.setColor(sf::Color::Cyan);
     // arrow.setRotation(140);
 
-    LLNode test("123", sf::Color::Black, consolas, 30.f, sf::Color::White);
-    test.setPosition({50, 50});
 
 
     while (window.isOpen())
@@ -74,9 +73,6 @@ int main()
             break;
         }
 
-        //test.draw(window);
-        //window.draw(arrow);
-        //std::cout << screenID << '\n';
         window.display();
     }
 }

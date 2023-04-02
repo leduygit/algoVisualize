@@ -11,6 +11,9 @@ public:
     void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
+    void drawArrow(sf::RenderWindow &window);
+    void randomSLL();
+    void randomSortedSLL();
 private:
     Button create, search, insert, remove;
 
@@ -28,10 +31,11 @@ private:
     Button subRemoveButton[3];
 
     // smaller than 10
-    int SLLSize;
+    int SLLSize = 0;
     LLNode nodes[11];
     ArrowShape arrow[11];
 
+    int nodeDis;
     float nodesPos[11];
 };
 #endif

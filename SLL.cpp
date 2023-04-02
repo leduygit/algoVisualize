@@ -1,6 +1,12 @@
 #include "SLL.hpp"
 #include "string.h"
 
+int randInt(int l, int r)
+{
+    if (l > r) return r;
+    return l + rand() % (r - l + 1);
+}
+
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
@@ -51,6 +57,34 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         subRemoveButton[i].setPosition(subRemovePos);
         subRemovePos.x += 170;
     }
+
+    nodeDis = 150;
+    sf::Vector2f nodePos = {50, 100};
+    for (int i = 0; i < 11; ++i)
+    {
+        nodes[i] = LLNode("1", textColor, font, 30.f, backgroundColor);
+        nodes[i].setPosition(nodePos);
+        nodePos.x += nodeDis;
+        // (width, height, tipWidth, tipHeight), in this case the arrow is horizontal
+        arrow[i] = ArrowShape(65, 8, 15, 15);
+        arrow[i].setColor(sf::Color::Black);
+    }
+}
+
+void SLL::drawArrow(sf::RenderWindow &window)
+{
+    for (int i = SLLSize; i > 0; --i)
+    {
+        sf::Vector2f center1 = nodes[i].getCenter();
+        sf::Vector2f center2 = nodes[i - 1].getCenter();
+        // radius = 30, outline = 4.f
+        sf::Vector2f position = {center2.x + 35.f, center2.y - (30.f - (30.f - 4.f))};
+        arrow[i].setPosition(position);
+    }
+
+    // window.draw(arrow[5]);
+    for (int i = SLLSize - 1; i > 0; --i)
+        window.draw(arrow[i]);
 }
 
 void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
@@ -95,6 +129,10 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     if (drawSubRemove)
         for (int i = 0; i < 3; ++i)
             subRemoveButton[i].drawButton(window);
+
+    for (int i = 0; i < SLLSize; ++i)
+        nodes[i].draw(window);
+    drawArrow(window);
 }
 
 bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
@@ -125,7 +163,7 @@ bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
 
     if (drawSubRemove)
         for (int i = 0; i < 3; ++i)
-            if (subInsertButton[i].hoverChangeColor(ev, window))
+            if (subRemoveButton[i].hoverChangeColor(ev, window))
                 return true;
 
     return false;
@@ -153,5 +191,45 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     {
         drawSubRemove = !drawSubRemove;
         drawSubCreate = drawSubInsert = drawSubSearch = 0;
+    }
+
+    if (drawSubCreate)
+    {
+        if (subCreateButton[0].isMouseOnButton(window))
+            SLLSize = 0;
+        else if (subCreateButton[1].isMouseOnButton(window))
+            randomSLL();
+        else if (subCreateButton[2].isMouseOnButton(window))
+            randomSortedSLL();
+    }
+}
+
+std::string toString(int x)
+{
+    std::string num = "";
+    while (x)
+    {
+        num += ('0' + x % 10);
+        x /= 10;
+    }
+    reverse(num.begin(), num.end());
+    return num;
+}
+
+void SLL::randomSLL()
+{
+    SLLSize = randInt(1, 10);
+    for (int i = 0; i < SLLSize; ++i)
+        nodes[i].setString(toString(randInt(1, 10)));
+}
+
+void SLL::randomSortedSLL()
+{
+    std::cout << toString(270) << '\n';
+    SLLSize = randInt(1, 10);
+    int x = 1;
+    for (int i = 0; i < SLLSize; ++i){
+        x = randInt(x, 999);
+        nodes[i].setString(toString(x));
     }
 }
