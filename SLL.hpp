@@ -47,6 +47,6 @@ private:
     ArrowShape arrow[11];
 
     int nodeDis;
-    float nodesPos[11];
+    sf::Vector2f nodesPos[11];
 };
 #endif

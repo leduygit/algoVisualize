@@ -11,6 +11,7 @@ public:
     void draw(sf::RenderWindow &window);
     std::string getString();
     sf::Vector2f getCenter();
+    sf::Vector2f getPosition();
 
 private:
     sf::CircleShape circle;

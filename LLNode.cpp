@@ -45,3 +45,8 @@ std::string LLNode::getString()
 {
     return numbers.getString();
 }
+
+sf::Vector2f LLNode::getPosition()
+{
+    return circle.getPosition();
+}
