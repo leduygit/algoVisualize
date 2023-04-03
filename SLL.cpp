@@ -1,5 +1,4 @@
 #include "SLL.hpp"
-#include "string.h"
 
 int randInt(int l, int r)
 {
@@ -81,8 +80,19 @@ void SLL::drawArrow(sf::RenderWindow &window)
         sf::Vector2f center1 = nodes[i].getCenter();
         sf::Vector2f center2 = nodes[i - 1].getCenter();
         // radius = 30, outline = 4.f
-        sf::Vector2f position = {center2.x + 35.f, center2.y - (30.f - (30.f - 4.f))};
+        float angle;
+        if (center1.x == center2.x) angle = 0;
+        else{
+            float slope = (center1.y - center2.y) / (center1.x - center2.x);
+            angle = atan(slope);
+        }
+        float radius = 32.f;
+        float d = 4;
+        sf::Vector2f position = {center2.x + radius * sin(angle) - d * cos(angle), center2.y + radius * cos(angle) + d * sin(angle)};
+        std::cout << radius * cos(angle) - d * sin(angle) << ' ' << radius * sin(angle) + d * cos(angle) << '\n';
+        std::cout << cos(angle) << ' ' << sin(angle) << '\n';
         arrow[i].setPosition(position);
+        arrow[i].setRotation(angle * 180 / 3.14);
     }
 
     // window.draw(arrow[5]);

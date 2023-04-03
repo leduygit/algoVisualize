@@ -3,6 +3,8 @@
 #include "ArrowLine.hpp"
 #include "Button.hpp"
 #include "LLNode.hpp"
+#include "string.h"
+#include <math.h>
 
 class SLL
 {
