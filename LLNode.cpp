@@ -40,3 +40,8 @@ void LLNode::setString(std::string str)
 {
     numbers.setString(str);
 }
+
+std::string LLNode::getString()
+{
+    return numbers.getString();
+}

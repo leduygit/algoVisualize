@@ -9,6 +9,7 @@ public:
     void setPosition(sf::Vector2f pos);
     void setString(std::string str);
     void draw(sf::RenderWindow &window);
+    std::string getString();
     sf::Vector2f getCenter();
 
 private:

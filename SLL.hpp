@@ -12,8 +12,13 @@ public:
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
     void drawArrow(sf::RenderWindow &window);
+
+    // create function
     void randomSLL();
     void randomSortedSLL();
+
+    // insert function
+    void addSLL(int pos);
 private:
     Button create, search, insert, remove;
 

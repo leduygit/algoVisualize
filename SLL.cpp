@@ -202,6 +202,16 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         else if (subCreateButton[2].isMouseOnButton(window))
             randomSortedSLL();
     }
+
+    if (drawSubInsert)
+    {
+        if (subInsertButton[0].isMouseOnButton(window))
+            addSLL(0);
+        else if (subInsertButton[2].isMouseOnButton(window))
+            addSLL(randInt(0, SLLSize - 1));
+        else if (subInsertButton[1].isMouseOnButton(window))
+            addSLL(SLLSize);
+    }
 }
 
 std::string toString(int x)
@@ -232,4 +242,15 @@ void SLL::randomSortedSLL()
         x = randInt(x, 999);
         nodes[i].setString(toString(x));
     }
+}
+
+void SLL::addSLL(int pos)
+{
+    if (pos > SLLSize || pos < 0) return;
+    if (SLLSize >= 10) return;
+    for (int i = SLLSize + 1; i > pos; --i){
+        nodes[i].setString(nodes[i - 1].getString());
+    }
+    nodes[pos].setString(toString(randInt(1, 999)));
+    ++SLLSize;
 }
