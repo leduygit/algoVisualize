@@ -3,7 +3,8 @@
 
 int randInt(int l, int r)
 {
-    if (l > r) return r;
+    if (l > r)
+        return r;
     return l + rand() % (r - l + 1);
 }
 
@@ -13,12 +14,14 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
     insert = Button("Insert", textColor, font, buttonSize, backgroundColor);
     remove = Button("Remove", textColor, font, buttonSize, backgroundColor);
+    backButton = Button("Return", textColor, font, {180, 60}, backgroundColor);
 
     sf::Vector2f position = {100, 550};
     create.setPosition(position);
     search.setPosition({position.x, position.y + buttonSize.y + 20});
     insert.setPosition({position.x, position.y + 2 * buttonSize.y + 40});
     remove.setPosition({position.x, position.y + 3 * buttonSize.y + 60});
+    backButton.setPosition({30, 40});
 
     std::string subCreateName[] = {"Empty", "Random", "Sorted", "Fixed size"};
 
@@ -59,14 +62,14 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     }
 
     nodeDis = 150;
-    sf::Vector2f nodePos = {50, 100};
+    sf::Vector2f nodePos = {50, 170};
     for (int i = 0; i < 11; ++i)
     {
         nodes[i] = LLNode("1", textColor, font, 30.f, backgroundColor);
         nodes[i].setPosition(nodePos);
         nodePos.x += nodeDis;
         // (width, height, tipWidth, tipHeight), in this case the arrow is horizontal
-        arrow[i] = ArrowShape(65, 8, 15, 15);
+        arrow[i] = ArrowShape(70, 8, 15, 15);
         arrow[i].setColor(sf::Color::Black);
     }
 }
@@ -109,6 +112,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     }
 
     window.clear(sf::Color::White);
+    backButton.drawButton(window);
     create.drawButton(window);
     search.drawButton(window);
     insert.drawButton(window);
@@ -137,6 +141,8 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
 
 bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
 {
+    if (backButton.hoverChangeColor(ev, window))
+        return true;
     if (create.hoverChangeColor(ev, window))
         return true;
     if (search.hoverChangeColor(ev, window))
@@ -172,6 +178,12 @@ bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
 void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
 {
     // if (ev.type != sf::Event::MouseButtonReleased) return;
+    if (backButton.isMouseOnButton(window))
+    {
+        SLLSize = 0;
+        screenID = 3;
+        return;
+    }
     if (create.isMouseOnButton(window))
     {
         drawSubCreate = !drawSubCreate;
@@ -212,6 +224,16 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         else if (subInsertButton[1].isMouseOnButton(window))
             addSLL(SLLSize);
     }
+
+    if (drawSubRemove)
+    {
+        if (subRemoveButton[0].isMouseOnButton(window))
+            delSLL(0);
+        else if (subRemoveButton[2].isMouseOnButton(window))
+            delSLL(randInt(0, SLLSize - 1));
+        else if (subRemoveButton[1].isMouseOnButton(window))
+            delSLL(SLLSize - 1);
+    }
 }
 
 std::string toString(int x)
@@ -235,10 +257,10 @@ void SLL::randomSLL()
 
 void SLL::randomSortedSLL()
 {
-    std::cout << toString(270) << '\n';
     SLLSize = randInt(1, 10);
     int x = 1;
-    for (int i = 0; i < SLLSize; ++i){
+    for (int i = 0; i < SLLSize; ++i)
+    {
         x = randInt(x, 999);
         nodes[i].setString(toString(x));
     }
@@ -246,11 +268,26 @@ void SLL::randomSortedSLL()
 
 void SLL::addSLL(int pos)
 {
-    if (pos > SLLSize || pos < 0) return;
-    if (SLLSize >= 10) return;
-    for (int i = SLLSize + 1; i > pos; --i){
+    if (pos > SLLSize || pos < 0)
+        return;
+    if (SLLSize >= 10)
+        return;
+    for (int i = SLLSize + 1; i > pos; --i)
+    {
         nodes[i].setString(nodes[i - 1].getString());
     }
     nodes[pos].setString(toString(randInt(1, 999)));
     ++SLLSize;
+}
+
+void SLL::delSLL(int pos)
+{
+    if (pos > SLLSize - 1 || pos < 0)
+        return;
+    if (SLLSize <= 0)
+        return;
+
+    for (int i = pos; i < SLLSize; ++i)
+        nodes[i].setString(nodes[i + 1].getString());
+    --SLLSize;
 }

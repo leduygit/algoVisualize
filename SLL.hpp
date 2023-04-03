@@ -19,8 +19,11 @@ public:
 
     // insert function
     void addSLL(int pos);
+
+    // delete function
+    void delSLL(int pos);
 private:
-    Button create, search, insert, remove;
+    Button create, search, insert, remove, backButton;
 
     bool drawSubCreate;
     Button subCreateButton[4];
@@ -34,6 +37,7 @@ private:
 
     bool drawSubRemove;
     Button subRemoveButton[3];
+    
 
     // smaller than 10
     int SLLSize = 0;
