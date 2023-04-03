@@ -48,5 +48,7 @@ private:
 
     int nodeDis;
     sf::Vector2f nodesPos[11];
+
+    bool isDeleting[11];
 };
 #endif

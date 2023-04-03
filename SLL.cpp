@@ -72,8 +72,6 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         arrow[i] = ArrowShape(70, 8, 15, 15);
         arrow[i].setColor(sf::Color::Black);
     }
-
-    
 }
 
 void SLL::drawArrow(sf::RenderWindow &window)
@@ -84,12 +82,14 @@ void SLL::drawArrow(sf::RenderWindow &window)
         sf::Vector2f center2 = nodes[i - 1].getCenter();
         // radius = 30, outline = 4.f
         float angle;
-        if (center1.x == center2.x) angle = 0;
-        else{
+        if (center1.x == center2.x)
+            angle = 0;
+        else
+        {
             float slope = (center1.y - center2.y) / (center1.x - center2.x);
             angle = atan(slope);
         }
-        //angle = 3.14 / 3;
+        // angle = 3.14 / 3;
         float radius = 32.f;
         float d = 4;
         sf::Vector2f position = {center2.x + radius * cos(angle) + d * sin(angle), center2.y + radius * sin(angle) - d * cos(angle)};
@@ -98,8 +98,8 @@ void SLL::drawArrow(sf::RenderWindow &window)
         arrowWidth -= 2 * radius;
         arrow[i] = ArrowShape(arrowWidth * 0.82, 2 * d, arrowWidth * 0.18, 20);
         arrow[i].setColor(sf::Color::Black);
-        //std::cout << radius * cos(angle) - d * sin(angle) << ' ' << radius * sin(angle) + d * cos(angle) << '\n';
-        //std::cout << cos(angle) << ' ' << sin(angle) << '\n';
+        // std::cout << radius * cos(angle) - d * sin(angle) << ' ' << radius * sin(angle) + d * cos(angle) << '\n';
+        // std::cout << cos(angle) << ' ' << sin(angle) << '\n';
         arrow[i].setPosition(position);
         arrow[i].setRotation(angle * 180 / 3.14);
     }
@@ -158,10 +158,14 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         for (int i = 0; i < 3; ++i)
             subRemoveButton[i].drawButton(window);
 
-    for (int i = 0; i < SLLSize; ++i){
+    for (int i = 0; i < SLLSize; ++i)
+    {
         nodes[i].draw(window);
         sf::Vector2f curPos = nodes[i].getPosition();
-        if (curPos != nodesPos[i]) nodes[i].setPosition({curPos.x, curPos.y - 5});
+        if (curPos.y != nodesPos[i].y)
+            nodes[i].setPosition({curPos.x, curPos.y - 5});
+        if (curPos.x != nodesPos[i].x)
+            nodes[i].setPosition({curPos.x - 5, curPos.y});
     }
     drawArrow(window);
 }
@@ -279,7 +283,10 @@ void SLL::randomSLL()
 {
     SLLSize = randInt(1, 10);
     for (int i = 0; i < SLLSize; ++i)
-        nodes[i].setString(toString(randInt(1, 10)));
+    {
+        nodes[i].setPosition(nodesPos[i]);
+        nodes[i].setString(toString(randInt(1, 100)));
+    }
 }
 
 void SLL::randomSortedSLL()
@@ -288,8 +295,9 @@ void SLL::randomSortedSLL()
     int x = 1;
     for (int i = 0; i < SLLSize; ++i)
     {
-        x = randInt(x, 999);
+        x = randInt(x, 100);
         nodes[i].setString(toString(x));
+        nodes[i].setPosition(nodesPos[i]);
     }
 }
 
@@ -303,9 +311,12 @@ void SLL::addSLL(int pos)
     {
         nodes[i].setString(nodes[i - 1].getString());
     }
+    
+    ++SLLSize;
+    for (int i = 0; i < SLLSize; ++i) nodes[i].setPosition(nodesPos[i]);
     nodes[pos].setString(toString(randInt(1, 999)));
     nodes[pos].setPosition({nodesPos[pos].x, 300});
-    ++SLLSize;
+    
 }
 
 void SLL::delSLL(int pos)
@@ -316,6 +327,9 @@ void SLL::delSLL(int pos)
         return;
 
     for (int i = pos; i < SLLSize; ++i)
+    {
+        nodes[i].setPosition(nodesPos[i + 1]);
         nodes[i].setString(nodes[i + 1].getString());
+    }
     --SLLSize;
 }
