@@ -50,3 +50,17 @@ sf::Vector2f LLNode::getPosition()
 {
     return circle.getPosition();
 }
+
+void LLNode::setRadius(float radius)
+{
+    sf::Vector2f currCen = this->getCenter();
+    circle.setRadius(radius);
+    numbers.setCharacterSize(2 * radius / 3);
+
+    this->setPosition({currCen.x - radius, currCen.y - radius});
+}
+
+float LLNode::getRadius()
+{
+    return circle.getRadius();
+}

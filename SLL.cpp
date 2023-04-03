@@ -71,6 +71,7 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         // (width, height, tipWidth, tipHeight), in this case the arrow is horizontal
         arrow[i] = ArrowShape(70, 8, 15, 15);
         arrow[i].setColor(sf::Color::Black);
+        isDeleting[i] = 0;
     }
 }
 
@@ -89,7 +90,6 @@ void SLL::drawArrow(sf::RenderWindow &window)
             float slope = (center1.y - center2.y) / (center1.x - center2.x);
             angle = atan(slope);
         }
-        // angle = 3.14 / 3;
         float radius = 32.f;
         float d = 4;
         sf::Vector2f position = {center2.x + radius * cos(angle) + d * sin(angle), center2.y + radius * sin(angle) - d * cos(angle)};
@@ -160,6 +160,18 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
 
     for (int i = 0; i < SLLSize; ++i)
     {
+        if (isDeleting[i])
+        {
+            nodes[i].setRadius(nodes[i].getRadius() - 2.f);
+            nodes[i].draw(window);
+            if (nodes[i].getRadius() == 0)
+            {
+                isDeleting[i] = 0;
+                nodes[i].setRadius(30.f);
+                delSLL(i);
+            }
+            continue;
+        }
         nodes[i].draw(window);
         sf::Vector2f curPos = nodes[i].getPosition();
         if (curPos.y != nodesPos[i].y)
@@ -259,11 +271,24 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     if (drawSubRemove)
     {
         if (subRemoveButton[0].isMouseOnButton(window))
-            delSLL(0);
+        {
+            if (SLLSize > 0)
+            {
+                isDeleting[0] = 1;
+                delSLL(0);
+            }
+        }
         else if (subRemoveButton[2].isMouseOnButton(window))
-            delSLL(randInt(0, SLLSize - 1));
+        {
+            int pos = randInt(0, SLLSize - 1);
+            isDeleting[pos] = 1;
+            delSLL(pos);
+        }
         else if (subRemoveButton[1].isMouseOnButton(window))
+        {
+            isDeleting[SLLSize - 1] = 1;
             delSLL(SLLSize - 1);
+        }
     }
 }
 
@@ -325,7 +350,7 @@ void SLL::delSLL(int pos)
         return;
     if (SLLSize <= 0)
         return;
-
+    if (isDeleting[pos]) return;
     for (int i = pos; i < SLLSize; ++i)
     {
         nodes[i].setPosition(nodesPos[i + 1]);

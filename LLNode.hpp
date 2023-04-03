@@ -12,6 +12,8 @@ public:
     std::string getString();
     sf::Vector2f getCenter();
     sf::Vector2f getPosition();
+    void setRadius(float radius);
+    float getRadius();
 
 private:
     sf::CircleShape circle;
