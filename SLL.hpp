@@ -50,5 +50,7 @@ private:
     sf::Vector2f nodesPos[11];
 
     bool isDeleting[11];
+
+    float delayTime;
 };
 #endif

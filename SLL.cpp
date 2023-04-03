@@ -73,6 +73,8 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         arrow[i].setColor(sf::Color::Black);
         isDeleting[i] = 0;
     }
+
+    delayTime = 0.f;
 }
 
 void SLL::drawArrow(sf::RenderWindow &window)
@@ -111,6 +113,10 @@ void SLL::drawArrow(sf::RenderWindow &window)
 
 void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
 {
+    sf::Clock clock;
+
+    float currTime = 0.f;
+
     while (window.pollEvent(ev))
     {
         switch (ev.type)
@@ -174,10 +180,12 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         }
         nodes[i].draw(window);
         sf::Vector2f curPos = nodes[i].getPosition();
-        if (curPos.y != nodesPos[i].y)
+        if (curPos.y > nodesPos[i].y)
             nodes[i].setPosition({curPos.x, curPos.y - 5});
-        if (curPos.x != nodesPos[i].x)
+        else if (curPos.x > nodesPos[i].x)
             nodes[i].setPosition({curPos.x - 5, curPos.y});
+        else if (curPos.x < nodesPos[i].x)
+            nodes[i].setPosition({curPos.x + 5, curPos.y});
     }
     drawArrow(window);
 }
@@ -335,10 +343,11 @@ void SLL::addSLL(int pos)
     for (int i = SLLSize + 1; i > pos; --i)
     {
         nodes[i].setString(nodes[i - 1].getString());
+        nodes[i].setPosition(nodesPos[i - 1]);
     }
 
     ++SLLSize;
-    for (int i = 0; i < SLLSize; ++i) nodes[i].setPosition(nodesPos[i]);
+    //for (int i = 0; i < pos; ++i) nodes[i].setPosition(nodesPos[i - 1]);
     nodes[pos].setString(toString(randInt(1, 999)));
     nodes[pos].setPosition({nodesPos[pos].x, 300});
     
