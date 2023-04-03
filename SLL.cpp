@@ -311,7 +311,7 @@ void SLL::addSLL(int pos)
     {
         nodes[i].setString(nodes[i - 1].getString());
     }
-    
+
     ++SLLSize;
     for (int i = 0; i < SLLSize; ++i) nodes[i].setPosition(nodesPos[i]);
     nodes[pos].setString(toString(randInt(1, 999)));
