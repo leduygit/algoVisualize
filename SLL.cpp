@@ -141,6 +141,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     //     int i = randInt(0, SLLSize);
     //     nodes[i].setPosition({nodesPos[i].x, 300});
     // }
+
     window.clear(sf::Color::White);
     backButton.drawButton(window);
     create.drawButton(window);
@@ -164,8 +165,30 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         for (int i = 0; i < 3; ++i)
             subRemoveButton[i].drawButton(window);
 
+    bool colorNewNode = 0;
+    std::cout << doneSearching << '\n';
+    if (doneSearching) SLLclearSearching();
     for (int i = 0; i < SLLSize; ++i)
     {
+        if (SLLisSearching && !colorNewNode && !nodeSearch[i])
+        {
+            colorNewNode = 1;
+            nodeSearch[i] = 1;
+            if (nodeVal[i] == searchValue){
+                nodes[i].setBackgroundColor(sf::Color::Red);
+                SLLisSearching = 0;
+                doneSearching = 1;
+                frameDelay = 2;
+            }
+            else{
+                nodes[i].setBackgroundColor(sf::Color::Green);
+                if (i == SLLSize - 1 && SLLisSearching)
+                {
+                    doneSearching = 1;
+                    frameDelay = 2;
+                }
+            }
+        }
         if (isDeleting[i])
         {
             nodes[i].setRadius(nodes[i].getRadius() - 2.f);
@@ -188,6 +211,12 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
             nodes[i].setPosition({curPos.x + 5, curPos.y});
     }
     drawArrow(window);
+    if (SLLisSearching) _sleep(500);
+    else if (frameDelay > 0)
+    {
+        _sleep(500);
+        --frameDelay;
+    }
 }
 
 bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
@@ -298,6 +327,18 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
             delSLL(SLLSize - 1);
         }
     }
+
+    if (drawSubSearch)
+    {
+        if (subSearchButton[0].isMouseOnButton(window))
+        {
+            searchValue = 54;
+            SLLisSearching = 1;
+            doneSearching = 0;
+            for (int i = 0; i < SLLSize; ++i)
+                nodeSearch[i] = 0;
+        }
+    }
 }
 
 std::string toString(int x)
@@ -318,7 +359,9 @@ void SLL::randomSLL()
     for (int i = 0; i < SLLSize; ++i)
     {
         nodes[i].setPosition(nodesPos[i]);
-        nodes[i].setString(toString(randInt(1, 100)));
+        int x = randInt(1, 100);
+        nodeVal[i] = x;
+        nodes[i].setString(toString(x));
     }
 }
 
@@ -329,6 +372,7 @@ void SLL::randomSortedSLL()
     for (int i = 0; i < SLLSize; ++i)
     {
         x = randInt(x, 100);
+        nodeVal[i] = x;
         nodes[i].setString(toString(x));
         nodes[i].setPosition(nodesPos[i]);
     }
@@ -347,10 +391,11 @@ void SLL::addSLL(int pos)
     }
 
     ++SLLSize;
-    //for (int i = 0; i < pos; ++i) nodes[i].setPosition(nodesPos[i - 1]);
-    nodes[pos].setString(toString(randInt(1, 999)));
+    // for (int i = 0; i < pos; ++i) nodes[i].setPosition(nodesPos[i - 1]);
+    int val = randInt(1, 999);
+    nodeVal[pos] = val;
+    nodes[pos].setString(toString(val));
     nodes[pos].setPosition({nodesPos[pos].x, 300});
-    
 }
 
 void SLL::delSLL(int pos)
@@ -359,11 +404,23 @@ void SLL::delSLL(int pos)
         return;
     if (SLLSize <= 0)
         return;
-    if (isDeleting[pos]) return;
+    if (isDeleting[pos])
+        return;
     for (int i = pos; i < SLLSize; ++i)
     {
         nodes[i].setPosition(nodesPos[i + 1]);
         nodes[i].setString(nodes[i + 1].getString());
+        nodeVal[i] = nodeVal[i + 1];
     }
     --SLLSize;
+}
+
+void SLL::SLLclearSearching()
+{
+    for (int i = 0; i < SLLSize; ++i){
+        nodes[i].setBackgroundColor(sf::Color::White);
+        nodeSearch[i] = 0;
+    }
+    doneSearching = 0;
+    SLLisSearching = 0;
 }

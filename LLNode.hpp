@@ -14,6 +14,7 @@ public:
     sf::Vector2f getPosition();
     void setRadius(float radius);
     float getRadius();
+    void setBackgroundColor(const sf::Color &color);
 
 private:
     sf::CircleShape circle;

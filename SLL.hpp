@@ -24,6 +24,9 @@ public:
 
     // delete function
     void delSLL(int pos);
+
+    // search function
+    void SLLclearSearching();
 private:
     Button create, search, insert, remove, backButton;
 
@@ -48,8 +51,13 @@ private:
 
     int nodeDis;
     sf::Vector2f nodesPos[11];
+    int nodeVal[11];
 
     bool isDeleting[11];
+    bool SLLisSearching = 0, doneSearching = 0, nodeSearch[11];
+    int searchValue;
+    
+    int frameDelay;
 
     float delayTime;
 };

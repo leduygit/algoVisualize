@@ -64,3 +64,8 @@ float LLNode::getRadius()
 {
     return circle.getRadius();
 }
+
+void LLNode::setBackgroundColor(const sf::Color &color)
+{
+    circle.setFillColor(color);
+}
