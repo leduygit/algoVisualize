@@ -185,7 +185,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
                 break;
             case (sf::Event::MouseButtonPressed):
                 mouseClicked(ev, window, screenID);
-                inputPos = inputVal = 0;
+                isInputPos = isInputVal = 0;
                 break;
             case (sf::Event::TextEntered):
                 if (inputBox[currInputBox].typedOn(ev))

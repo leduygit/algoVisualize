@@ -58,7 +58,7 @@ void Textbox::setText(std::string str)
 {
     text.str("");
     text << str;
-    textbox.setString(str);
+    textbox.setString(str + "_");
 }
 
 std::string Textbox::getText()
