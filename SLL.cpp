@@ -281,7 +281,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
             subRemoveButton[i].drawButton(window);
 
     bool colorNewNode = 0;
-    std::cout << doneSearching << '\n';
+    
     if (doneSearching) SLLclearSearching();
     for (int i = 0; i < SLLSize; ++i)
     {
