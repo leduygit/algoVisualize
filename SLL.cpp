@@ -80,9 +80,19 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         inputBox[i].setFont(font);
     }
 
+    // create input box
     inputBox[0].setPosition({subCreateButton[3].getPos().x + 60, position.y + buttonSize.y + 20});
+
+    // search input box
     inputBox[1].setPosition({subSearchButton[0].getPos().x + 60, position.y + 2 * buttonSize.y + 40});
 
+    // insert input box
+    inputBox[2].setPosition({subInsertButton[0].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
+    inputBox[3].setPosition({subInsertButton[1].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
+    inputBox[4].setPosition({subInsertButton[2].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
+
+    // remove input box
+    inputBox[5].setPosition({subInsertButton[2].getPos().x + 60, position.y + 4 * buttonSize.y + 80});
     delayTime = 0.f;
 }
 
@@ -138,11 +148,25 @@ void SLL::handleFeature(int pos)
     // 5 = remove head
     // 6 = remove tail
     // 7 = remove custom position
-    if (pos == 1)
+    switch (pos)
     {
+    case 1:
         searchValue = inputVal;
         SLLisSearching = 1;
-    }  
+        break;
+    case 2:
+        addSLL(0);
+        break;
+    case 3:
+        addSLL(SLLSize);
+        break;
+    case 4:
+        addSLL(inputPos - 1);
+        break;
+    default:
+        break;
+    }
+    
 }
 
 
@@ -382,11 +406,20 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     if (drawSubInsert)
     {
         if (subInsertButton[0].isMouseOnButton(window))
-            addSLL(0);
+        {
+            isInputVal = 1;
+            currInputBox = 2;
+        }
         else if (subInsertButton[2].isMouseOnButton(window))
-            addSLL(randInt(0, SLLSize - 1));
+        {
+            isInputPos = 1;
+            currInputBox = 4;
+        }
         else if (subInsertButton[1].isMouseOnButton(window))
-            addSLL(SLLSize);
+        {
+            isInputVal = 1;
+            currInputBox = 3;
+        }
     }
 
     if (drawSubRemove)
@@ -477,7 +510,7 @@ void SLL::addSLL(int pos)
 
     ++SLLSize;
     // for (int i = 0; i < pos; ++i) nodes[i].setPosition(nodesPos[i - 1]);
-    int val = randInt(1, 999);
+    int val = inputVal;
     nodeVal[pos] = val;
     nodes[pos].setString(toString(val));
     nodes[pos].setPosition({nodesPos[pos].x, 300});
