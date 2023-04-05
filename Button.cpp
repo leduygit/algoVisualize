@@ -12,6 +12,11 @@ Button::Button(std::string str, sf::Color textColor, sf::Font &font,sf::Vector2f
     button.setFillColor(backgroundColor);
 }
 
+sf::Vector2f Button::getPos()
+{
+    return button.getPosition();
+}
+
 void Button::setTextFont(sf::Font &font)
 {
     text.setFont(font);

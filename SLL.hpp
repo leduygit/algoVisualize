@@ -4,6 +4,7 @@
 #include "Button.hpp"
 #include "LLNode.hpp"
 #include "string.h"
+#include "Textbox.hpp"
 #include <math.h>
 
 class SLL
@@ -27,6 +28,11 @@ public:
 
     // search function
     void SLLclearSearching();
+
+    // input function
+    void handleInput();
+    void handleFeature(int pos);
+
 private:
     Button create, search, insert, remove, backButton;
 
@@ -57,7 +63,11 @@ private:
     bool SLLisSearching = 0, doneSearching = 0, nodeSearch[11];
     int searchValue;
     
-    int frameDelay;
+    int frameDelay = 0;
+
+    bool isInputVal, isInputPos;
+    int currInputBox, inputVal, inputPos;
+    Textbox inputBox[8];
 
     float delayTime;
 };

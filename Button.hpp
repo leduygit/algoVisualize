@@ -22,6 +22,8 @@ public:
 
     bool isMouseOnButton(sf::RenderWindow &window);
 
+    sf::Vector2f getPos();
+
     bool hoverChangeColor(sf::Event &ev, sf::RenderWindow &window);
 private:
     sf::RectangleShape button;

@@ -74,6 +74,15 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         isDeleting[i] = 0;
     }
 
+    for (int i = 0; i < 8; ++i)
+    {
+        inputBox[i] = Textbox(20, sf::Color::Black, 1);
+        inputBox[i].setFont(font);
+    }
+
+    inputBox[0].setPosition({subCreateButton[3].getPos().x + 60, position.y + buttonSize.y + 20});
+    inputBox[1].setPosition({subSearchButton[0].getPos().x + 60, position.y + 2 * buttonSize.y + 40});
+
     delayTime = 0.f;
 }
 
@@ -111,12 +120,84 @@ void SLL::drawArrow(sf::RenderWindow &window)
         window.draw(arrow[i]);
 }
 
+int stringToInt(std::string t)
+{
+    int x = 0;
+    for (char c : t) x = x * 10 + (c - '0');
+    return x;
+}
+
+
+void SLL::handleFeature(int pos)
+{
+    // 0 = create fixed size 
+    // 1 = search value
+    // 2 = insert head
+    // 3 = insert tail
+    // 4 = insert custom position
+    // 5 = remove head
+    // 6 = remove tail
+    // 7 = remove custom position
+    if (pos == 1)
+    {
+        searchValue = inputVal;
+        SLLisSearching = 1;
+    }  
+}
+
+
+void SLL::handleInput()
+{
+    if (isInputPos)
+    {
+        isInputPos = 0;
+        isInputVal = 1;
+        inputPos = stringToInt(inputBox[currInputBox].getText());
+        inputBox[currInputBox].setText("");
+    }
+    else
+    {
+        isInputVal = 0;
+        inputVal = stringToInt(inputBox[currInputBox].getText());
+        inputBox[currInputBox].setText("");
+        handleFeature(currInputBox);
+    }
+}
+
 void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
 {
     sf::Clock clock;
+    //textbox testing
 
     float currTime = 0.f;
 
+    if (isInputPos || isInputVal)
+    {
+        while (window.pollEvent(ev))
+        {
+            switch (ev.type)
+            {
+            case (sf::Event::Closed):
+                window.close();
+                break;
+            case (sf::Event::MouseMoved):
+                checkHover(ev, window);
+                break;
+            case (sf::Event::MouseButtonPressed):
+                mouseClicked(ev, window, screenID);
+                inputPos = inputVal = 0;
+                break;
+            case (sf::Event::TextEntered):
+                if (inputBox[currInputBox].typedOn(ev))
+                    handleInput();
+                break;
+            
+            default:
+                break;
+            }
+        }
+    }
+    else
     while (window.pollEvent(ev))
     {
         switch (ev.type)
@@ -130,6 +211,8 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         case (sf::Event::MouseButtonPressed):
             if (ev.mouseButton.button == sf::Mouse::Left)
                 mouseClicked(ev, window, screenID);
+            break;
+        case (sf::Event::KeyPressed):
             break;
         default:
             break;
@@ -148,6 +231,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     search.drawButton(window);
     insert.drawButton(window);
     remove.drawButton(window);
+    if (isInputPos || isInputVal) inputBox[currInputBox].drawTo(window);
 
     if (drawSubCreate)
         for (int i = 0; i < 4; ++i)
@@ -332,8 +416,9 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     {
         if (subSearchButton[0].isMouseOnButton(window))
         {
-            searchValue = 54;
-            SLLisSearching = 1;
+            isInputVal = 1;
+            currInputBox = 1;
+            inputBox[1].setSelected(1);
             doneSearching = 0;
             for (int i = 0; i < SLLSize; ++i)
                 nodeSearch[i] = 0;
