@@ -145,9 +145,7 @@ void SLL::handleFeature(int pos)
     // 2 = insert head
     // 3 = insert tail
     // 4 = insert custom position
-    // 5 = remove head
-    // 6 = remove tail
-    // 7 = remove custom position
+    // 5 = remove custom position
     switch (pos)
     {
     case 1:
@@ -161,7 +159,11 @@ void SLL::handleFeature(int pos)
         addSLL(SLLSize);
         break;
     case 4:
-        addSLL(inputPos - 1);
+        if (inputPos <= SLLSize) addSLL(inputPos - 1);
+        break;
+    case 5:
+        if (inputPos - 1 < SLLSize && inputPos > 0) isDeleting[inputPos - 1] = 1;
+        delSLL(inputPos - 1);
         break;
     default:
         break;
@@ -175,9 +177,14 @@ void SLL::handleInput()
     if (isInputPos)
     {
         isInputPos = 0;
-        isInputVal = 1;
         inputPos = stringToInt(inputBox[currInputBox].getText());
         inputBox[currInputBox].setText("");
+        if (currInputBox == 5)
+        {
+            handleFeature(currInputBox);
+            return;
+        }
+        isInputVal = 1;
     }
     else
     {
@@ -434,9 +441,8 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         }
         else if (subRemoveButton[2].isMouseOnButton(window))
         {
-            int pos = randInt(0, SLLSize - 1);
-            isDeleting[pos] = 1;
-            delSLL(pos);
+            isInputPos = 1;
+            currInputBox = 5;
         }
         else if (subRemoveButton[1].isMouseOnButton(window))
         {
