@@ -18,6 +18,8 @@ public:
 
     void setPosition(sf::Vector2f pos);
 
+    void setOutlineThickness(float thickness);
+
     void drawButton(sf::RenderWindow &window);
 
     bool isMouseOnButton(sf::RenderWindow &window);

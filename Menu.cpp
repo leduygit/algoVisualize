@@ -28,6 +28,12 @@ void Menu::drawMenu(sf::RenderWindow &window)
     settingButton.drawButton(window);
 }
 
+void Menu::setOutlineThickness(float thickness)
+{
+    startButton.setOutlineThickness(thickness);
+    settingButton.setOutlineThickness(thickness);
+}
+
 bool Menu::checkMenuButton(sf::Event &ev, sf::RenderWindow &window)
 {
     // mouse on start button
@@ -51,7 +57,7 @@ void Menu::changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &currentS
     return;
 }
 
-void Menu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+void Menu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     while (window.pollEvent(ev))
     {
@@ -70,7 +76,7 @@ void Menu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
             break;
         }
     }
-
-    window.clear(sf::Color::White);
+    window.clear(sf::Color(124,143,160));
+    window.draw(background);
     this->drawMenu(window);
 }

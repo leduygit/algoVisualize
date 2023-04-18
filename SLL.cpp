@@ -9,18 +9,30 @@ int randInt(int l, int r)
 
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
+    noti.setFillColor(sf::Color::Black);
+    noti.setFont(font);
+    noti.setPosition({100, 300});
+    noti.setString("testing");
+    noti.setCharacterSize(60);
+
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
     insert = Button("Insert", textColor, font, buttonSize, backgroundColor);
     remove = Button("Remove", textColor, font, buttonSize, backgroundColor);
-    backButton = Button("Return", textColor, font, {180, 60}, backgroundColor);
-
+    backButton = Button("Return", textColor, font, {100, 50}, backgroundColor);
+    backButton.setOutlineThickness(4);
+    
     sf::Vector2f position = {100, 550};
+    buttonBox.setOutlineColor(sf::Color::Black);
+    buttonBox.setOutlineThickness(4.f);
+    buttonBox.setPosition(position);
+    buttonBox.setSize({buttonSize.x, 4 * buttonSize.y});
+
     create.setPosition(position);
-    search.setPosition({position.x, position.y + buttonSize.y + 20});
-    insert.setPosition({position.x, position.y + 2 * buttonSize.y + 40});
-    remove.setPosition({position.x, position.y + 3 * buttonSize.y + 60});
-    backButton.setPosition({30, 40});
+    search.setPosition({position.x, position.y + buttonSize.y});
+    insert.setPosition({position.x, position.y + 2 * buttonSize.y});
+    remove.setPosition({position.x, position.y + 3 * buttonSize.y});
+    backButton.setPosition({40, 38});
 
     std::string subCreateName[] = {"Empty", "Random", "Sorted", "Fixed size"};
 
@@ -30,33 +42,37 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     {
         subCreateButton[i] = Button(subCreateName[i], textColor, font, subSize, backgroundColor);
         subCreateButton[i].setPosition(subCreatePos);
+        subCreateButton[i].setOutlineThickness(3);
         subCreatePos.x += 170;
     }
 
     std::string subSearchName[] = {"Value"};
-    sf::Vector2f subSearchPos = {position.x + buttonSize.x + 20, position.y + buttonSize.y + 20};
+    sf::Vector2f subSearchPos = {position.x + buttonSize.x + 20, position.y + buttonSize.y};
     for (int i = 0; i < 1; ++i)
     {
         subSearchButton[i] = Button(subSearchName[i], textColor, font, subSize, backgroundColor);
         subSearchButton[i].setPosition(subSearchPos);
+        subSearchButton[i].setOutlineThickness(3);
         subSearchPos.x += 170;
     }
 
     std::string subInsertName[] = {"Head", "Tail", "Position"};
-    sf::Vector2f subInsertPos = {position.x + buttonSize.x + 20, position.y + 2 * buttonSize.y + 40};
+    sf::Vector2f subInsertPos = {position.x + buttonSize.x + 20, position.y + 2 * buttonSize.y};
     for (int i = 0; i < 3; ++i)
     {
         subInsertButton[i] = Button(subInsertName[i], textColor, font, subSize, backgroundColor);
         subInsertButton[i].setPosition(subInsertPos);
+        subInsertButton[i].setOutlineThickness(3);
         subInsertPos.x += 170;
     }
 
     std::string subRemoveName[] = {"Head", "Tail", "Position"};
-    sf::Vector2f subRemovePos = {position.x + buttonSize.x + 20, position.y + 3 * buttonSize.y + 60};
+    sf::Vector2f subRemovePos = {position.x + buttonSize.x + 20, position.y + 3 * buttonSize.y};
     for (int i = 0; i < 3; ++i)
     {
         subRemoveButton[i] = Button(subRemoveName[i], textColor, font, subSize, backgroundColor);
         subRemoveButton[i].setPosition(subRemovePos);
+        subRemoveButton[i].setOutlineThickness(3);
         subRemovePos.x += 170;
     }
 
@@ -81,18 +97,18 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     }
 
     // create input box
-    inputBox[0].setPosition({subCreateButton[3].getPos().x + 60, position.y + buttonSize.y + 20});
+    inputBox[0].setPosition({subCreateButton[3].getPos().x + 60, position.y + buttonSize.y + 5});
 
     // search input box
-    inputBox[1].setPosition({subSearchButton[0].getPos().x + 60, position.y + 2 * buttonSize.y + 40});
+    inputBox[1].setPosition({subSearchButton[0].getPos().x + 60, position.y + 2 * buttonSize.y + 5});
 
     // insert input box
-    inputBox[2].setPosition({subInsertButton[0].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
-    inputBox[3].setPosition({subInsertButton[1].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
-    inputBox[4].setPosition({subInsertButton[2].getPos().x + 60, position.y + 3 * buttonSize.y + 60});
+    inputBox[2].setPosition({subInsertButton[0].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
+    inputBox[3].setPosition({subInsertButton[1].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
+    inputBox[4].setPosition({subInsertButton[2].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
 
     // remove input box
-    inputBox[5].setPosition({subInsertButton[2].getPos().x + 60, position.y + 4 * buttonSize.y + 80});
+    inputBox[5].setPosition({subInsertButton[2].getPos().x + 60, position.y + 4 * buttonSize.y + 5});
     delayTime = 0.f;
 }
 
@@ -150,7 +166,7 @@ void SLL::handleFeature(int pos)
     {
     case 1:
         searchValue = inputVal;
-        SLLisSearching = 1;
+        if (SLLSize > 0) SLLisSearching = 1;
         break;
     case 2:
         addSLL(0);
@@ -159,7 +175,7 @@ void SLL::handleFeature(int pos)
         addSLL(SLLSize);
         break;
     case 4:
-        if (inputPos <= SLLSize) addSLL(inputPos - 1);
+        if (inputPos <= SLLSize + 1) addSLL(inputPos - 1);
         break;
     case 5:
         if (inputPos - 1 < SLLSize && inputPos > 0) isDeleting[inputPos - 1] = 1;
@@ -195,7 +211,7 @@ void SLL::handleInput()
     }
 }
 
-void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     sf::Clock clock;
     //textbox testing
@@ -256,12 +272,15 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     //     nodes[i].setPosition({nodesPos[i].x, 300});
     // }
 
-    window.clear(sf::Color::White);
+    window.clear(sf::Color(124,143,160));
+    window.draw(background);
+    window.draw(buttonBox);
     backButton.drawButton(window);
     create.drawButton(window);
     search.drawButton(window);
     insert.drawButton(window);
     remove.drawButton(window);
+    window.draw(noti);
     if (isInputPos || isInputVal) inputBox[currInputBox].drawTo(window);
 
     if (drawSubCreate)
@@ -306,7 +325,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         }
         if (isDeleting[i])
         {
-            nodes[i].setRadius(nodes[i].getRadius() - 2.f);
+            nodes[i].setRadius(nodes[i].getRadius() - 1.f);
             nodes[i].draw(window);
             if (nodes[i].getRadius() == 0)
             {
@@ -319,11 +338,11 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         nodes[i].draw(window);
         sf::Vector2f curPos = nodes[i].getPosition();
         if (curPos.y > nodesPos[i].y)
-            nodes[i].setPosition({curPos.x, curPos.y - 5});
+            nodes[i].setPosition({curPos.x, curPos.y - 2});
         else if (curPos.x > nodesPos[i].x)
-            nodes[i].setPosition({curPos.x - 5, curPos.y});
+            nodes[i].setPosition({curPos.x - 2, curPos.y});
         else if (curPos.x < nodesPos[i].x)
-            nodes[i].setPosition({curPos.x + 5, curPos.y});
+            nodes[i].setPosition({curPos.x + 2, curPos.y});
     }
     drawArrow(window);
     if (SLLisSearching) _sleep(500);
@@ -512,6 +531,7 @@ void SLL::addSLL(int pos)
     {
         nodes[i].setString(nodes[i - 1].getString());
         nodes[i].setPosition(nodesPos[i - 1]);
+        nodeVal[i] = nodeVal[i - 1];
     }
 
     ++SLLSize;

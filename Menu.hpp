@@ -14,7 +14,8 @@ public:
     void drawMenu(sf::RenderWindow &window);
     bool checkMenuButton(sf::Event &ev, sf::RenderWindow &window);
     void changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &currentScreenID);
-    void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID);
+    void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
+    void setOutlineThickness(float thickness);
 private:
     Button startButton = Button();
     Button settingButton = Button();

@@ -4,9 +4,9 @@ Button::Button(std::string str, sf::Color textColor, sf::Font &font,sf::Vector2f
     text.setFont(font);
     text.setString(str);
     text.setColor(textColor);
-    text.setCharacterSize(buttonSize.y / 3);
+    text.setCharacterSize(buttonSize.y / 2.8);
 
-    button.setOutlineThickness(6);
+    //button.setOutlineThickness(6);
     button.setOutlineColor(sf::Color::Black);
     button.setSize(buttonSize);
     button.setFillColor(backgroundColor);
@@ -32,6 +32,11 @@ void Button::setTextColor(sf::Color color)
     text.setFillColor(color);
 }
 
+void Button::setOutlineThickness(float thickness)
+{
+    button.setOutlineThickness(thickness);
+}
+
 void Button::setPosition(sf::Vector2f pos)
 {
     button.setPosition(pos);
@@ -39,7 +44,7 @@ void Button::setPosition(sf::Vector2f pos)
 
     // can giua
     float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2.2;
-    float yPos = pos.y + text.getLocalBounds().height;
+    float yPos = pos.y + text.getLocalBounds().height / 1.2;
 
     text.setPosition({xPos, yPos});
 }
@@ -65,7 +70,7 @@ bool Button::hoverChangeColor(sf::Event &ev, sf::RenderWindow &window)
 {
     if (this->isMouseOnButton(window))
     {
-        this->setBackColor(sf::Color(50, 60, 70));
+        this->setBackColor(sf::Color(208,185,151));
         return true;
     }
     else

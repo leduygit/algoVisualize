@@ -44,7 +44,7 @@ void DatabaseMenu::setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Ve
     circularLinkedListButton = Button("Circular Linked List", textColor, font, buttonSize, backgroundColor);
     stackButton = Button("Stack", textColor, font, buttonSize, backgroundColor);
     queueButton = Button("Queue", textColor, font, buttonSize, backgroundColor);
-    backButton = Button("Return", textColor, font, {buttonSize.x - 280, buttonSize.y - 50}, backgroundColor);
+    backButton = Button("Return", textColor, font, {100, 50}, backgroundColor);
 }
 
 
@@ -62,7 +62,16 @@ void DatabaseMenu::drawDatabaseMenu(sf::RenderWindow &window)
 
 void DatabaseMenu::setPosition(sf::Vector2f pos)
 {
-    backButton.setPosition({30, 40});
+    backButton.setPosition({40, 38});
+
+    backButton.setOutlineThickness(4);
+    staticArrayButton.setOutlineThickness(6);
+    dynamicArrayButton.setOutlineThickness(6);
+    singlyLinkedListButton.setOutlineThickness(6);
+    doublyLinkedListButton.setOutlineThickness(6);
+    circularLinkedListButton.setOutlineThickness(6);
+    stackButton.setOutlineThickness(6);
+    queueButton.setOutlineThickness(6);
 
     //first line
     staticArrayButton.setPosition({260 + pos.x, pos.y});
@@ -104,7 +113,7 @@ void DatabaseMenu::changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &
     return;
 }
 
-void DatabaseMenu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+void DatabaseMenu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     while (window.pollEvent(ev))
     {
@@ -124,6 +133,7 @@ void DatabaseMenu::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &scr
         }
     }
 
-    window.clear(sf::Color::White);
+    window.clear(sf::Color(124,143,160));
+    window.draw(background);
     this->drawDatabaseMenu(window);
 }

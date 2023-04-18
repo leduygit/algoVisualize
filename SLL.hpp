@@ -11,7 +11,6 @@ class SLL
 {
 public:
     SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
-    void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
     void drawArrow(sf::RenderWindow &window);
@@ -32,9 +31,11 @@ public:
     // input function
     void handleInput();
     void handleFeature(int pos);
+    void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
 
 private:
     Button create, search, insert, remove, backButton;
+    sf::RectangleShape buttonBox;
 
     bool drawSubCreate;
     Button subCreateButton[4];
@@ -70,5 +71,8 @@ private:
     Textbox inputBox[8];
 
     float delayTime;
+
+    // notification text
+    sf::Text noti;
 };
 #endif

@@ -8,22 +8,23 @@
 void menuInitialize(Menu &menu, sf::Font &font)
 {
     sf::Vector2f menuButtonSize(500.f, 120.f);
-    sf::Color textColor(90, 200, 200);
+    sf::Color textColor(87,113,138);
     menu.setStart("Start", textColor, font, menuButtonSize, sf::Color::White);
     menu.setSetting("Setting", textColor, font, menuButtonSize, sf::Color::White);
     menu.setPos({550, 320});
+    menu.setOutlineThickness(6);
 }
 
 int main()
 {
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Visualize algo", sf::Style::Titlebar | sf::Style::Close);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(144);
 
     sf::VertexArray lines(sf::Lines, 3);
 
     sf::Font consolas;
-    consolas.loadFromFile("Font/Consolas.ttf");
+    consolas.loadFromFile("Font/NotoSerifHebrew_Condensed-Black.ttf");
 
     // Main menu setup
     Menu menu;
@@ -33,7 +34,7 @@ int main()
 
     // database Menu setup
     sf::Vector2f menuButtonSize(460.f, 110.f);
-    sf::Color textColor(90, 200, 200);
+    sf::Color textColor(87,113,138);
     DatabaseMenu dataMenu;
     dataMenu.setupDatabaseMenu(textColor, consolas, menuButtonSize, sf::Color::White);
     dataMenu.setPosition({30, 280});
@@ -42,19 +43,23 @@ int main()
     sf::Vector2f SinglyButtonSize = {100, 50};
     SLL SinglyMenu(textColor, consolas, SinglyButtonSize, sf::Color::White);
 
+    // background image
+    sf::Texture texture;
+    texture.loadFromFile("Image/background.png");
+    sf::Sprite background;
+    background.setTexture(texture);
+
+    sf::Texture featureTexture;
+    featureTexture.loadFromFile("Image/FeatureBackground.png");
+    sf::Sprite featureBack;
+    featureBack.setTexture(featureTexture);
+
 
 
     // 1 = Default Menu
     // 2 = Database Menu
     // 3 = Setting
-    // 4 = Singly linked list
-
-    // ArrowShape arrow(100.f, 5.f, 10.f, 20.f);
-    // arrow.setOutlineThickness(3.f);
-    // arrow.setPosition({100, 100});
-    // arrow.setOutlineColor(sf::Color::Black); 
-    // arrow.setColor(sf::Color::Cyan);
-    // arrow.setRotation(140);
+    // 6 = Singly linked list
 
 
 
@@ -65,16 +70,16 @@ int main()
         switch (screenID)
         {
         case 1:
-            menu.handleEvent(ev, window, screenID);
+            menu.handleEvent(ev, window, screenID, background);
             break;
         case 6:
-            SinglyMenu.handleEvent(ev, window, screenID);
+            SinglyMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         default:
-            dataMenu.handleEvent(ev, window, screenID);
+            dataMenu.handleEvent(ev, window, screenID, background);
             break;
         }
-
+        //window.draw(background);
         window.display();
     }
 }
