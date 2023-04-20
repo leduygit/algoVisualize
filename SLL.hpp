@@ -5,6 +5,8 @@
 #include "LLNode.hpp"
 #include "string.h"
 #include "Textbox.hpp"
+#include "Image.hpp"
+#include "Highlight.hpp"
 #include <math.h>
 
 class SLL
@@ -13,7 +15,7 @@ public:
     SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
-    void drawArrow(sf::RenderWindow &window);
+    void drawArrow(sf::RenderWindow &window, int i, int j);
 
     // create function
     void randomSLL();
@@ -29,9 +31,18 @@ public:
     void SLLclearSearching();
 
     // input function
-    void handleInput();
-    void handleFeature(int pos);
+    void handleInput(sf::RenderWindow &window, sf::Sprite &background);
+    void handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &background);
     void handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
+
+    // draw function
+    void mainDraw(sf::RenderWindow &window, sf::Sprite &background);
+
+    // notification function
+    void drawNotification(sf::RenderWindow &window, sf::Sprite &background);
+
+    // animation function
+    void searchAnimation(sf::RenderWindow &window, sf::Sprite &background);
 
 private:
     Button create, search, insert, remove, backButton;
@@ -74,5 +85,10 @@ private:
 
     // notification text
     sf::Text noti;
+    bool isNoti = 0;
+    Image notiFrog;
+
+    // code hightlight image
+    Highlight searchCode;
 };
 #endif

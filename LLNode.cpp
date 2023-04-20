@@ -17,7 +17,7 @@ void LLNode::setPosition(sf::Vector2f pos)
 {
     circle.setPosition(pos);
 
-    float xPos = pos.x + (2 * circle.getRadius() - numbers.getLocalBounds().width) / 2.8;
+    float xPos = pos.x + (2 * circle.getRadius() - numbers.getLocalBounds().width) / 2.2;
     float yPos = pos.y + numbers.getLocalBounds().height;
 
     numbers.setPosition({xPos, yPos});
@@ -39,6 +39,7 @@ sf::Vector2f LLNode::getCenter()
 void LLNode::setString(std::string str)
 {
     numbers.setString(str);
+    this->setPosition(this->getPosition());
 }
 
 std::string LLNode::getString()

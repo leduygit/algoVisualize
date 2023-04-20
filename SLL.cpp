@@ -11,9 +11,14 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 {
     noti.setFillColor(sf::Color::Black);
     noti.setFont(font);
-    noti.setPosition({100, 300});
+    noti.setPosition({580, 420});
     noti.setString("testing");
     noti.setCharacterSize(60);
+
+    notiFrog.loadTexture("Image/notifrog.png");
+    notiFrog.setPosition({400, 350});
+    searchCode.loadTexture("Image/SLLsearchCode.png");
+    searchCode.setPosition({910, 577});
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -21,7 +26,7 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     remove = Button("Remove", textColor, font, buttonSize, backgroundColor);
     backButton = Button("Return", textColor, font, {100, 50}, backgroundColor);
     backButton.setOutlineThickness(4);
-    
+
     sf::Vector2f position = {100, 550};
     buttonBox.setOutlineColor(sf::Color::Black);
     buttonBox.setOutlineThickness(4.f);
@@ -112,51 +117,48 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     delayTime = 0.f;
 }
 
-void SLL::drawArrow(sf::RenderWindow &window)
+void SLL::drawArrow(sf::RenderWindow &window, int i, int j)
 {
-    for (int i = SLLSize; i > 0; --i)
+    // assume that i < j
+    sf::Vector2f center1 = nodes[i].getCenter();
+    sf::Vector2f center2 = nodes[j].getCenter();
+    // radius = 30, outline = 4.f
+    float angle;
+    if (center1.x == center2.x)
+        angle = 0;
+    else
     {
-        sf::Vector2f center1 = nodes[i].getCenter();
-        sf::Vector2f center2 = nodes[i - 1].getCenter();
-        // radius = 30, outline = 4.f
-        float angle;
-        if (center1.x == center2.x)
-            angle = 0;
-        else
-        {
-            float slope = (center1.y - center2.y) / (center1.x - center2.x);
-            angle = atan(slope);
-        }
-        float radius = 32.f;
-        float d = 4;
-        sf::Vector2f position = {center2.x + radius * cos(angle) + d * sin(angle), center2.y + radius * sin(angle) - d * cos(angle)};
-
-        float arrowWidth = sqrt((center1.x - center2.x) * (center1.x - center2.x) + (center1.y - center2.y) * (center1.y - center2.y));
-        arrowWidth -= 2 * radius;
-        arrow[i] = ArrowShape(arrowWidth * 0.82, 2 * d, arrowWidth * 0.18, 20);
-        arrow[i].setColor(sf::Color::Black);
-        // std::cout << radius * cos(angle) - d * sin(angle) << ' ' << radius * sin(angle) + d * cos(angle) << '\n';
-        // std::cout << cos(angle) << ' ' << sin(angle) << '\n';
-        arrow[i].setPosition(position);
-        arrow[i].setRotation(angle * 180 / 3.14);
+        float slope = (center1.y - center2.y) / (center1.x - center2.x);
+        angle = atan(slope);
     }
+    float radius = 32.f;
+    float d = 4;
+    sf::Vector2f position = {center2.x + radius * cos(angle) + d * sin(angle), center2.y + radius * sin(angle) - d * cos(angle)};
+
+    float arrowWidth = sqrt((center1.x - center2.x) * (center1.x - center2.x) + (center1.y - center2.y) * (center1.y - center2.y));
+    arrowWidth -= 2 * radius;
+    arrow[i] = ArrowShape(arrowWidth * 0.82, 2 * d, arrowWidth * 0.18, 20);
+    arrow[i].setColor(sf::Color::Black);
+    // std::cout << radius * cos(angle) - d * sin(angle) << ' ' << radius * sin(angle) + d * cos(angle) << '\n';
+    // std::cout << cos(angle) << ' ' << sin(angle) << '\n';
+    arrow[i].setPosition(position);
+    arrow[i].setRotation(angle * 180 / 3.14);
 
     // window.draw(arrow[5]);
-    for (int i = SLLSize - 1; i > 0; --i)
-        window.draw(arrow[i]);
+    window.draw(arrow[i]);
 }
 
 int stringToInt(std::string t)
 {
     int x = 0;
-    for (char c : t) x = x * 10 + (c - '0');
+    for (char c : t)
+        x = x * 10 + (c - '0');
     return x;
 }
 
-
-void SLL::handleFeature(int pos)
+void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &background)
 {
-    // 0 = create fixed size 
+    // 0 = create fixed size
     // 1 = search value
     // 2 = insert head
     // 3 = insert tail
@@ -166,7 +168,7 @@ void SLL::handleFeature(int pos)
     {
     case 1:
         searchValue = inputVal;
-        if (SLLSize > 0) SLLisSearching = 1;
+        searchAnimation(window, background);
         break;
     case 2:
         addSLL(0);
@@ -175,20 +177,20 @@ void SLL::handleFeature(int pos)
         addSLL(SLLSize);
         break;
     case 4:
-        if (inputPos <= SLLSize + 1) addSLL(inputPos - 1);
+        if (inputPos <= SLLSize + 1)
+            addSLL(inputPos - 1);
         break;
     case 5:
-        if (inputPos - 1 < SLLSize && inputPos > 0) isDeleting[inputPos - 1] = 1;
+        if (inputPos - 1 < SLLSize && inputPos > 0)
+            isDeleting[inputPos - 1] = 1;
         delSLL(inputPos - 1);
         break;
     default:
         break;
     }
-    
 }
 
-
-void SLL::handleInput()
+void SLL::handleInput(sf::RenderWindow &window, sf::Sprite &background)
 {
     if (isInputPos)
     {
@@ -197,7 +199,7 @@ void SLL::handleInput()
         inputBox[currInputBox].setText("");
         if (currInputBox == 5)
         {
-            handleFeature(currInputBox);
+            handleFeature(currInputBox, window, background);
             return;
         }
         isInputVal = 1;
@@ -207,14 +209,201 @@ void SLL::handleInput()
         isInputVal = 0;
         inputVal = stringToInt(inputBox[currInputBox].getText());
         inputBox[currInputBox].setText("");
-        handleFeature(currInputBox);
+        handleFeature(currInputBox, window, background);
     }
+}
+
+std::string toString(int x)
+{
+    std::string num = "";
+    if (x == 0)
+        num += '0';
+    while (x)
+    {
+        num += ('0' + x % 10);
+        x /= 10;
+    }
+    reverse(num.begin(), num.end());
+    return num;
+}
+
+void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+
+    // line 1, checking null array
+    mainDraw(window, background);
+    searchCode.setLine(1);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    searchCode.draw(window);
+    window.display();
+    _sleep(500);
+
+    int foundValue = 0;
+    // change nodes color and highlight animation
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        // if first frame then draw initialize frame
+        if (i == 0)
+        {
+            nodes[i].setBackgroundColor(sf::Color::Green);
+            searchCode.setLine(2);
+            mainDraw(window, background);
+            for (int j = 0; j < SLLSize; ++j)
+            {
+                nodes[j].draw(window);
+                if (j > 0)
+                    drawArrow(window, j, j - 1);
+            }
+            searchCode.draw(window);
+            window.display();
+            _sleep(500);
+        }
+
+        // found value
+        if (nodeVal[i] == searchValue)
+        {
+            foundValue = i + 1;
+            break;
+        }
+        
+
+        // first frame - while statement
+        {
+            searchCode.setLine(3);
+            mainDraw(window, background);
+            for (int j = 0; j < SLLSize; ++j)
+            {
+                nodes[j].draw(window);
+                if (j > 0)
+                    drawArrow(window, j, j - 1);
+            }
+            searchCode.draw(window);
+            window.display();
+            _sleep(500);
+        }
+
+        // second frame - jumping to next node
+        {
+            // set next node color
+            if (i + 1 < SLLSize)
+                nodes[i + 1].setBackgroundColor(sf::Color::Green);
+            searchCode.setLine(4);
+            mainDraw(window, background);
+            for (int j = 0; j < SLLSize; ++j)
+            {
+                nodes[j].draw(window);
+                if (j > 0)
+                    drawArrow(window, j, j - 1);
+            }
+            searchCode.draw(window);
+            window.display();
+            _sleep(500);
+        }
+    }
+
+    // last if statement
+    {
+        searchCode.setLine(6);
+        mainDraw(window, background);
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            nodes[i].draw(window);
+            if (i > 0)
+                drawArrow(window, i, i - 1);
+            if (nodeVal[i] == searchValue)
+                nodes[i].setBackgroundColor(sf::Color::Red);
+        }
+        searchCode.draw(window);
+        window.display();
+        _sleep(500);
+    }
+
+    // set notification text
+    if (foundValue){
+        searchCode.setLine(6);
+        noti.setString("Found at index " + toString(foundValue));
+    }
+    else
+    {
+        searchCode.setLine(7);
+        noti.setString("Not found value " + toString(searchValue));
+    }
+
+    // return frame
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    searchCode.draw(window);
+    window.display();
+    _sleep(500);
+    drawNotification(window, background);
+
+    for (int i = 0; i < SLLSize; ++i) nodes[i].setBackgroundColor(sf::Color::White);
+}
+
+void SLL::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
+{
+
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    
+    notiFrog.draw(window);
+    window.draw(noti);
+    window.display();
+
+    _sleep(1000);
+
+}
+
+void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
+{
+    window.clear();
+    window.draw(background);
+    window.draw(buttonBox);
+    backButton.drawButton(window);
+    create.drawButton(window);
+    search.drawButton(window);
+    insert.drawButton(window);
+    remove.drawButton(window);
+
+    if (isInputPos || isInputVal)
+        inputBox[currInputBox].drawTo(window);
+
+    if (drawSubCreate)
+        for (int i = 0; i < 4; ++i)
+            subCreateButton[i].drawButton(window);
+
+    if (drawSubSearch)
+        for (int i = 0; i < 1; ++i)
+            subSearchButton[i].drawButton(window);
+
+    if (drawSubInsert)
+        for (int i = 0; i < 3; ++i)
+            subInsertButton[i].drawButton(window);
+
+    if (drawSubRemove)
+        for (int i = 0; i < 3; ++i)
+            subRemoveButton[i].drawButton(window);
 }
 
 void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     sf::Clock clock;
-    //textbox testing
+    // textbox testing
 
     float currTime = 0.f;
 
@@ -236,35 +425,35 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
                 break;
             case (sf::Event::TextEntered):
                 if (inputBox[currInputBox].typedOn(ev))
-                    handleInput();
+                    handleInput(window, background);
                 break;
-            
+
             default:
                 break;
             }
         }
     }
     else
-    while (window.pollEvent(ev))
-    {
-        switch (ev.type)
+        while (window.pollEvent(ev))
         {
-        case (sf::Event::Closed):
-            window.close();
-            break;
-        case (sf::Event::MouseMoved):
-            checkHover(ev, window);
-            break;
-        case (sf::Event::MouseButtonPressed):
-            if (ev.mouseButton.button == sf::Mouse::Left)
-                mouseClicked(ev, window, screenID);
-            break;
-        case (sf::Event::KeyPressed):
-            break;
-        default:
-            break;
+            switch (ev.type)
+            {
+            case (sf::Event::Closed):
+                window.close();
+                break;
+            case (sf::Event::MouseMoved):
+                checkHover(ev, window);
+                break;
+            case (sf::Event::MouseButtonPressed):
+                if (ev.mouseButton.button == sf::Mouse::Left)
+                    mouseClicked(ev, window, screenID);
+                break;
+            case (sf::Event::KeyPressed):
+                break;
+            default:
+                break;
+            }
         }
-    }
 
     // if (SLLSize != 0)
     // {
@@ -272,54 +461,33 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
     //     nodes[i].setPosition({nodesPos[i].x, 300});
     // }
 
-    window.clear(sf::Color(124,143,160));
-    window.draw(background);
-    window.draw(buttonBox);
-    backButton.drawButton(window);
-    create.drawButton(window);
-    search.drawButton(window);
-    insert.drawButton(window);
-    remove.drawButton(window);
-    window.draw(noti);
-    if (isInputPos || isInputVal) inputBox[currInputBox].drawTo(window);
-
-    if (drawSubCreate)
-        for (int i = 0; i < 4; ++i)
-            subCreateButton[i].drawButton(window);
-
-    if (drawSubSearch)
-        for (int i = 0; i < 1; ++i)
-            subSearchButton[i].drawButton(window);
-
-    if (drawSubInsert)
-        for (int i = 0; i < 3; ++i)
-            subInsertButton[i].drawButton(window);
-
-    if (drawSubRemove)
-        for (int i = 0; i < 3; ++i)
-            subRemoveButton[i].drawButton(window);
-
+    mainDraw(window, background);
     bool colorNewNode = 0;
-    
-    if (doneSearching) SLLclearSearching();
+
     for (int i = 0; i < SLLSize; ++i)
     {
         if (SLLisSearching && !colorNewNode && !nodeSearch[i])
         {
             colorNewNode = 1;
             nodeSearch[i] = 1;
-            if (nodeVal[i] == searchValue){
+            if (nodeVal[i] == searchValue)
+            {
                 nodes[i].setBackgroundColor(sf::Color::Red);
+                isNoti = true;
+                noti.setString("found at index " + toString(i + 1));
                 SLLisSearching = 0;
                 doneSearching = 1;
                 frameDelay = 2;
             }
-            else{
+            else
+            {
                 nodes[i].setBackgroundColor(sf::Color::Green);
                 if (i == SLLSize - 1 && SLLisSearching)
                 {
+                    isNoti = true;
+                    noti.setString("not found value " + toString(searchValue));
                     doneSearching = 1;
-                    frameDelay = 2;
+                    frameDelay = 1;
                 }
             }
         }
@@ -344,11 +512,28 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
         else if (curPos.x < nodesPos[i].x)
             nodes[i].setPosition({curPos.x + 2, curPos.y});
     }
-    drawArrow(window);
-    if (SLLisSearching) _sleep(500);
+
+    for (int i = 0; i < SLLSize; ++i)
+        drawArrow(window, i, i - 1);
+    // drawArrow(window);
+
+    searchCode.setLine(4);
+    if (SLLisSearching)
+        searchCode.draw(window);
+    if (isNoti)
+    {
+        isNoti = false;
+        notiFrog.draw(window);
+        window.draw(noti);
+    }
+    if (SLLisSearching)
+        _sleep(500);
     else if (frameDelay > 0)
     {
-        _sleep(500);
+        if (frameDelay > 1)
+            _sleep(500);
+        else
+            _sleep(2000);
         --frameDelay;
     }
 }
@@ -484,18 +669,6 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     }
 }
 
-std::string toString(int x)
-{
-    std::string num = "";
-    while (x)
-    {
-        num += ('0' + x % 10);
-        x /= 10;
-    }
-    reverse(num.begin(), num.end());
-    return num;
-}
-
 void SLL::randomSLL()
 {
     SLLSize = randInt(1, 10);
@@ -561,7 +734,8 @@ void SLL::delSLL(int pos)
 
 void SLL::SLLclearSearching()
 {
-    for (int i = 0; i < SLLSize; ++i){
+    for (int i = 0; i < SLLSize; ++i)
+    {
         nodes[i].setBackgroundColor(sf::Color::White);
         nodeSearch[i] = 0;
     }
