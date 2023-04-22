@@ -43,6 +43,13 @@ public:
 
     // animation function
     void searchAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void addTailAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void addPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
+
+    // drawing head/tail text
+    void drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail);
+
 
 private:
     Button create, search, insert, remove, backButton;
@@ -83,6 +90,9 @@ private:
 
     float delayTime;
 
+    // head/tail text
+    sf::Text headText, tailText;
+
     // notification text
     sf::Text noti;
     bool isNoti = 0;
@@ -90,5 +100,7 @@ private:
 
     // code hightlight image
     Highlight searchCode;
+    Highlight addHeadCode;
+    Highlight addTailCode;
 };
 #endif

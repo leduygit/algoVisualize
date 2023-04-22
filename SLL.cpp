@@ -9,6 +9,15 @@ int randInt(int l, int r)
 
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
+    headText.setFillColor(sf::Color::Black);
+    tailText.setFillColor(sf::Color::Black);
+    headText.setFont(font);
+    tailText.setFont(font);
+    headText.setString("Head");
+    tailText.setString("Tail");
+    tailText.setCharacterSize(20);
+    headText.setCharacterSize(20);
+
     noti.setFillColor(sf::Color::Black);
     noti.setFont(font);
     noti.setPosition({580, 420});
@@ -18,7 +27,11 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     notiFrog.loadTexture("Image/notifrog.png");
     notiFrog.setPosition({400, 350});
     searchCode.loadTexture("Image/SLLsearchCode.png");
-    searchCode.setPosition({910, 577});
+    searchCode.setPosition({911, 577});
+    addHeadCode.loadTexture("Image/SLLaddHeadCode.png");
+    addHeadCode.setPosition({911, 666});
+    addTailCode.loadTexture("Image/SLLaddTailCode.png");
+    addTailCode.setPosition({911, 666});
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -130,6 +143,8 @@ void SLL::drawArrow(sf::RenderWindow &window, int i, int j)
     {
         float slope = (center1.y - center2.y) / (center1.x - center2.x);
         angle = atan(slope);
+        if (slope == 0)
+            angle = 2 * 3.14;
     }
     float radius = 32.f;
     float d = 4;
@@ -171,10 +186,10 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
         searchAnimation(window, background);
         break;
     case 2:
-        addSLL(0);
+        addHeadAnimation(window, background);
         break;
     case 3:
-        addSLL(SLLSize);
+        addTailAnimation(window, background);
         break;
     case 4:
         if (inputPos <= SLLSize + 1)
@@ -240,8 +255,27 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             drawArrow(window, i, i - 1);
     }
     searchCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
     _sleep(500);
+
+    if (SLLSize == 0)
+    {
+        noti.setString("Not found value " + toString(searchValue));
+        mainDraw(window, background);
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            nodes[i].draw(window);
+            if (i > 0)
+                drawArrow(window, i, i - 1);
+        }
+        searchCode.draw(window);
+        drawingHeadTailText(window, 0, SLLSize - 1);
+        window.display();
+        _sleep(500);
+        drawNotification(window, background);
+        return;
+    }
 
     int foundValue = 0;
     // change nodes color and highlight animation
@@ -260,17 +294,10 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
                     drawArrow(window, j, j - 1);
             }
             searchCode.draw(window);
+            drawingHeadTailText(window, 0, SLLSize - 1);
             window.display();
             _sleep(500);
         }
-
-        // found value
-        if (nodeVal[i] == searchValue)
-        {
-            foundValue = i + 1;
-            break;
-        }
-        
 
         // first frame - while statement
         {
@@ -283,9 +310,21 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
                     drawArrow(window, j, j - 1);
             }
             searchCode.draw(window);
+            drawingHeadTailText(window, 0, SLLSize - 1);
             window.display();
             _sleep(500);
         }
+
+        // found value
+        if (nodeVal[i] == searchValue)
+        {
+            foundValue = i + 1;
+            break;
+        }
+
+        // if last node -> not jumping to next
+        if (i == SLLSize - 1)
+            break;
 
         // second frame - jumping to next node
         {
@@ -301,6 +340,8 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
                     drawArrow(window, j, j - 1);
             }
             searchCode.draw(window);
+            drawingHeadTailText(window, 0, SLLSize - 1);
+
             window.display();
             _sleep(500);
         }
@@ -315,16 +356,19 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             nodes[i].draw(window);
             if (i > 0)
                 drawArrow(window, i, i - 1);
-            if (nodeVal[i] == searchValue)
-                nodes[i].setBackgroundColor(sf::Color::Red);
         }
         searchCode.draw(window);
+        drawingHeadTailText(window, 0, SLLSize - 1);
+
         window.display();
         _sleep(500);
     }
+    if (foundValue)
+        nodes[foundValue - 1].setBackgroundColor(sf::Color::Red);
 
     // set notification text
-    if (foundValue){
+    if (foundValue)
+    {
         searchCode.setLine(6);
         noti.setString("Found at index " + toString(foundValue));
     }
@@ -343,11 +387,233 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             drawArrow(window, i, i - 1);
     }
     searchCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+
     window.display();
     _sleep(500);
     drawNotification(window, background);
 
-    for (int i = 0; i < SLLSize; ++i) nodes[i].setBackgroundColor(sf::Color::White);
+    for (int i = 0; i < SLLSize; ++i)
+        nodes[i].setBackgroundColor(sf::Color::White);
+}
+
+void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
+{
+    if (SLLSize == 0)
+        return;
+    sf::Vector2f headPos = nodes[posHead].getCenter();
+    headText.setPosition({headPos.x - 27, headPos.y + 35});
+    sf::Vector2f tailPos = nodes[posTail].getCenter();
+    tailText.setPosition({tailPos.x - 17, tailPos.y + 35});
+    if (headPos == tailPos)
+    {
+        headText.setString("Head/Tail");
+        window.draw(headText);
+    }
+    else
+    {
+        headText.setString("Head");
+        window.draw(headText);
+        window.draw(tailText);
+    }
+}
+
+void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    if (inputPos == 0)
+    {
+        addHeadAnimation(window, background);
+        return;
+    }
+    if (inputBox == SLLSize)
+    {
+        addTailAnimation(window, background);
+        return;
+    }
+
+    
+}
+
+void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    if (SLLSize >= 10)
+        return;
+    nodeVal[SLLSize] = inputVal;
+    nodes[SLLSize].setString(toString(inputVal));
+    nodes[SLLSize].setPosition({nodesPos[SLLSize].x, 300});
+    nodes[SLLSize].setBackgroundColor(sf::Color::Red);
+    ++SLLSize;
+
+    // first frame creating new node
+    addTailCode.setLine(1);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0 && i < SLLSize - 1)
+            drawArrow(window, i, i - 1);
+    }
+    addTailCode.draw(window);
+    if (SLLSize > 1)
+        drawingHeadTailText(window, 0, SLLSize - 2);
+    window.display();
+    _sleep(1000);
+
+    // moving animation
+
+    bool isMoving = true;
+    while (isMoving)
+    {
+        isMoving = false;
+        mainDraw(window, background);
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            sf::Vector2f curPos = nodes[i].getPosition();
+            if (curPos != nodesPos[i])
+                isMoving = true;
+            if (curPos.x < nodesPos[i].x)
+                curPos.x += 2;
+            if (curPos.y > nodesPos[i].y)
+                curPos.y -= 2;
+            nodes[i].setPosition(curPos);
+            nodes[i].draw(window);
+            if (i > 0 && i < SLLSize - 1)
+                drawArrow(window, i, i - 1);
+        }
+        addTailCode.draw(window);
+        if (SLLSize > 1)
+            drawingHeadTailText(window, 0, SLLSize - 2);
+        window.display();
+    }
+    _sleep(1000);
+
+    // second frame drawing arrow
+    addTailCode.setLine(2);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+
+    addTailCode.draw(window);
+    if (SLLSize > 1)
+        drawingHeadTailText(window, 0, SLLSize - 2);
+    window.display();
+    _sleep(1000);
+
+    // last frame changing head
+    addTailCode.setLine(3);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+
+    addTailCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    nodes[SLLSize - 1].setBackgroundColor(sf::Color::White);
+}
+
+
+void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    if (SLLSize >= 10)
+        return;
+    // preparing new position/ value for nodes
+    for (int i = SLLSize + 1; i > 0; --i)
+    {
+        nodes[i].setString(nodes[i - 1].getString());
+        nodes[i].setPosition(nodesPos[i - 1]);
+        nodeVal[i] = nodeVal[i - 1];
+    }
+    nodeVal[0] = inputVal;
+    nodes[0].setString(toString(inputVal));
+    nodes[0].setPosition({nodesPos[0].x, 300});
+    nodes[0].setBackgroundColor(sf::Color::Red);
+    ++SLLSize;
+
+    // first frame creating new node
+    addHeadCode.setLine(1);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 1)
+            drawArrow(window, i, i - 1);
+    }
+    addHeadCode.draw(window);
+    if (SLLSize > 1)
+        drawingHeadTailText(window, 1, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    // moving animation
+
+    bool isMoving = true;
+    while (isMoving)
+    {
+        isMoving = false;
+        mainDraw(window, background);
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            sf::Vector2f curPos = nodes[i].getPosition();
+            if (curPos != nodesPos[i])
+                isMoving = true;
+            if (curPos.x < nodesPos[i].x)
+                curPos.x += 2;
+            if (curPos.y > nodesPos[i].y)
+                curPos.y -= 2;
+            nodes[i].setPosition(curPos);
+            nodes[i].draw(window);
+            if (i > 1)
+                drawArrow(window, i, i - 1);
+        }
+        addHeadCode.draw(window);
+        if (SLLSize > 1)
+            drawingHeadTailText(window, 1, SLLSize - 1);
+        window.display();
+    }
+    _sleep(1000);
+
+    // second frame drawing arrow
+    addHeadCode.setLine(2);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+
+    addHeadCode.draw(window);
+    if (SLLSize > 1)
+        drawingHeadTailText(window, 1, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    // last frame changing head
+    addHeadCode.setLine(3);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+
+    addHeadCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    nodes[0].setBackgroundColor(sf::Color::White);
 }
 
 void SLL::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
@@ -360,13 +626,14 @@ void SLL::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
         if (i > 0)
             drawArrow(window, i, i - 1);
     }
-    
+
     notiFrog.draw(window);
     window.draw(noti);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+
     window.display();
 
     _sleep(1000);
-
 }
 
 void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
@@ -505,6 +772,8 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
         }
         nodes[i].draw(window);
         sf::Vector2f curPos = nodes[i].getPosition();
+        if (curPos == nodesPos[i])
+            continue;
         if (curPos.y > nodesPos[i].y)
             nodes[i].setPosition({curPos.x, curPos.y - 2});
         else if (curPos.x > nodesPos[i].x)
@@ -513,13 +782,11 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
             nodes[i].setPosition({curPos.x + 2, curPos.y});
     }
 
-    for (int i = 0; i < SLLSize; ++i)
+    for (int i = 1; i < SLLSize; ++i)
         drawArrow(window, i, i - 1);
     // drawArrow(window);
-
-    searchCode.setLine(4);
-    if (SLLisSearching)
-        searchCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    // addHeadCode.draw(window);
     if (isNoti)
     {
         isNoti = false;
