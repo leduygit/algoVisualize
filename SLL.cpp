@@ -418,21 +418,6 @@ void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail
     }
 }
 
-void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
-{
-    if (inputPos == 0)
-    {
-        addHeadAnimation(window, background);
-        return;
-    }
-    if (inputBox == SLLSize)
-    {
-        addTailAnimation(window, background);
-        return;
-    }
-
-    
-}
 
 void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
