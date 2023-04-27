@@ -102,5 +102,6 @@ private:
     Highlight searchCode;
     Highlight addHeadCode;
     Highlight addTailCode;
+    Highlight addPosCode;
 };
 #endif

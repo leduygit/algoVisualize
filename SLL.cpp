@@ -32,6 +32,8 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     addHeadCode.setPosition({911, 666});
     addTailCode.loadTexture("Image/SLLaddTailCode.png");
     addTailCode.setPosition({911, 666});
+    addPosCode.loadTexture("Image/SLLaddPosCode.png");
+    addPosCode.setPosition({911, 600});
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -143,8 +145,6 @@ void SLL::drawArrow(sf::RenderWindow &window, int i, int j)
     {
         float slope = (center1.y - center2.y) / (center1.x - center2.x);
         angle = atan(slope);
-        if (slope == 0)
-            angle = 2 * 3.14;
     }
     float radius = 32.f;
     float d = 4;
@@ -192,8 +192,7 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
         addTailAnimation(window, background);
         break;
     case 4:
-        if (inputPos <= SLLSize + 1)
-            addSLL(inputPos - 1);
+        addPosAnimation(window, background);
         break;
     case 5:
         if (inputPos - 1 < SLLSize && inputPos > 0)
@@ -418,6 +417,163 @@ void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail
     }
 }
 
+void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    --inputPos;
+    if (inputPos < 0 || inputPos > SLLSize || inputPos >= 10 || SLLSize >= 10)
+        return;
+    if (inputPos == 0)
+    {
+        addHeadAnimation(window, background);
+        return;
+    }
+    if (inputPos == SLLSize)
+    {
+        addTailAnimation(window, background);
+        return;
+    }
+
+    // init statement
+    addPosCode.setLine(1);
+    mainDraw(window, background);
+    nodes[0].setBackgroundColor(sf::Color::Green);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    addPosCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(500);
+
+    // for statement
+    for (int i = 0; i < inputPos; ++i)
+    {
+        // for condition
+        addPosCode.setLine(2);
+        mainDraw(window, background);
+        for (int j = 0; j < SLLSize; ++j)
+        {
+            nodes[j].draw(window);
+            if (j > 0)
+                drawArrow(window, j, j - 1);
+        }
+        addPosCode.draw(window);
+        drawingHeadTailText(window, 0, SLLSize - 1);
+        window.display();
+        _sleep(500);
+
+        // last node
+        if (i == inputPos - 1)
+            break;
+        nodes[i].setBackgroundColor(sf::Color::White);
+        nodes[i + 1].setBackgroundColor(sf::Color::Green);
+
+        // jumping to next node
+        addPosCode.setLine(3);
+        mainDraw(window, background);
+        for (int j = 0; j < SLLSize; ++j)
+        {
+            nodes[j].draw(window);
+            if (j > 0)
+                drawArrow(window, j, j - 1);
+        }
+        addPosCode.draw(window);
+        drawingHeadTailText(window, 0, SLLSize - 1);
+        window.display();
+        _sleep(500);
+    }
+
+    // making changes to array
+    SLLSize++;
+    for (int i = SLLSize - 1; i > inputPos; --i)
+    {
+        nodes[i].setString(nodes[i - 1].getString());
+        nodeVal[i] = nodeVal[i - 1];
+        nodes[i].setPosition(nodesPos[i - 1]);
+    }
+    nodes[inputPos].setString(toString(inputVal));
+    nodeVal[inputPos] = inputVal;
+    nodes[inputPos].setPosition({nodesPos[inputPos].x, 300});
+
+    // ading new Node
+    nodes[inputPos].setBackgroundColor(sf::Color::Yellow);
+    addPosCode.setLine(4);
+    mainDraw(window, background);
+    for (int j = 0; j < SLLSize; ++j)
+    {
+        nodes[j].draw(window);
+        if (j == inputPos || j - 1 == inputPos) continue;
+        if (j > 0)
+            drawArrow(window, j, j - 1);
+    }
+    addPosCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    // moving
+    bool isMoving = true;
+    while (isMoving)
+    {
+        isMoving = false;
+        mainDraw(window, background);
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            sf::Vector2f curPos = nodes[i].getPosition();
+            if (curPos != nodesPos[i])
+                isMoving = true;
+            if (curPos.x < nodesPos[i].x)
+                curPos.x += 1;
+            else if (curPos.y > nodesPos[i].y)
+                curPos.y -= 1;
+            nodes[i].setPosition(curPos);
+            nodes[i].draw(window);
+            if (i == inputPos || i - 1 == inputPos)
+                continue;
+            if (i > 0)
+                drawArrow(window, i, i - 1);
+        }
+        addPosCode.draw(window);
+        drawingHeadTailText(window, 0, SLLSize - 1);
+        window.display();
+    }
+    _sleep(1000);
+
+    // link added node to next node
+    addPosCode.setLine(5);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i == inputPos)
+            continue;
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    addPosCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    // link cur node to added node
+    addPosCode.setLine(6);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0)
+            drawArrow(window, i, i - 1);
+    }
+    addPosCode.draw(window);
+    drawingHeadTailText(window, 0, SLLSize - 1);
+    window.display();
+    _sleep(1000);
+
+    for (int i = 0; i < SLLSize; ++i) nodes[i].setBackgroundColor(sf::Color::White);
+}
 
 void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
@@ -505,7 +661,6 @@ void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
 
     nodes[SLLSize - 1].setBackgroundColor(sf::Color::White);
 }
-
 
 void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
