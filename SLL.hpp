@@ -8,13 +8,17 @@
 #include "Image.hpp"
 #include "Highlight.hpp"
 #include <math.h>
+#include <chrono>
+#include <thread>
+
+#define sleepFor(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
 class SLL
 {
 public:
     SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
-    void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID);
+    void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
     void drawArrow(sf::RenderWindow &window, int i, int j);
 
     // create function
@@ -37,18 +41,17 @@ public:
 
     // draw function
     void mainDraw(sf::RenderWindow &window, sf::Sprite &background);
-
-    // notification function
     void drawNotification(sf::RenderWindow &window, sf::Sprite &background);
+    void drawWithHighlight(Highlight feature, int highlightLine, int posNotDrawingArrow, int headPos, int tailPos, sf::RenderWindow &window, sf::Sprite &background);
+    void drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail);
 
     // animation function
     void searchAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void addTailAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void addPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
-
-    // drawing head/tail text
-    void drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail);
+    void delHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void delPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
 
 
 private:
@@ -103,5 +106,7 @@ private:
     Highlight addHeadCode;
     Highlight addTailCode;
     Highlight addPosCode;
+    Highlight delHeadCode;
+    Highlight delPosCode;
 };
 #endif

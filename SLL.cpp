@@ -1,5 +1,18 @@
 #include "SLL.hpp"
 
+void pause_for(int pauseTime)
+{
+    std::chrono::milliseconds duration = std::chrono::milliseconds(pauseTime);
+    auto start_time = std::chrono::steady_clock::now();
+    auto end_time = start_time + duration;
+
+    while (std::chrono::steady_clock::now() < end_time)
+    {
+        // Do other work while waiting
+        std::this_thread::yield();
+    }
+}
+
 int randInt(int l, int r)
 {
     if (l > r)
@@ -34,6 +47,10 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     addTailCode.setPosition({911, 666});
     addPosCode.loadTexture("Image/SLLaddPosCode.png");
     addPosCode.setPosition({911, 600});
+    delHeadCode.loadTexture("Image/SLLdelHeadCode.png");
+    delHeadCode.setPosition({911, 643});
+    delPosCode.loadTexture("Image/SLLdelPosCode.png");
+    delPosCode.setPosition({911, 554});
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -195,9 +212,7 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
         addPosAnimation(window, background);
         break;
     case 5:
-        if (inputPos - 1 < SLLSize && inputPos > 0)
-            isDeleting[inputPos - 1] = 1;
-        delSLL(inputPos - 1);
+        delPosAnimation(window, background);
         break;
     default:
         break;
@@ -256,7 +271,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
     searchCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(500);
+    pause_for(500);
 
     if (SLLSize == 0)
     {
@@ -271,7 +286,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
         searchCode.draw(window);
         drawingHeadTailText(window, 0, SLLSize - 1);
         window.display();
-        _sleep(500);
+        pause_for(500);
         drawNotification(window, background);
         return;
     }
@@ -295,7 +310,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             searchCode.draw(window);
             drawingHeadTailText(window, 0, SLLSize - 1);
             window.display();
-            _sleep(500);
+            pause_for(500);
         }
 
         // first frame - while statement
@@ -311,7 +326,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             searchCode.draw(window);
             drawingHeadTailText(window, 0, SLLSize - 1);
             window.display();
-            _sleep(500);
+            pause_for(500);
         }
 
         // found value
@@ -342,7 +357,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
             drawingHeadTailText(window, 0, SLLSize - 1);
 
             window.display();
-            _sleep(500);
+            pause_for(500);
         }
     }
 
@@ -360,7 +375,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
         drawingHeadTailText(window, 0, SLLSize - 1);
 
         window.display();
-        _sleep(500);
+        pause_for(500);
     }
     if (foundValue)
         nodes[foundValue - 1].setBackgroundColor(sf::Color::Red);
@@ -389,7 +404,7 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
     drawingHeadTailText(window, 0, SLLSize - 1);
 
     window.display();
-    _sleep(500);
+    pause_for(500);
     drawNotification(window, background);
 
     for (int i = 0; i < SLLSize; ++i)
@@ -398,13 +413,15 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 
 void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
 {
+    if (posHead >= SLLSize)
+        return;
     if (SLLSize == 0)
         return;
     sf::Vector2f headPos = nodes[posHead].getCenter();
     headText.setPosition({headPos.x - 27, headPos.y + 35});
     sf::Vector2f tailPos = nodes[posTail].getCenter();
     tailText.setPosition({tailPos.x - 17, tailPos.y + 35});
-    if (headPos == tailPos)
+    if (posHead == posTail)
     {
         headText.setString("Head/Tail");
         window.draw(headText);
@@ -413,8 +430,222 @@ void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail
     {
         headText.setString("Head");
         window.draw(headText);
-        window.draw(tailText);
+        if (posTail < SLLSize)
+            window.draw(tailText);
     }
+}
+
+void SLL::drawWithHighlight(Highlight feature, int highlightLine, int posNotDrawingArrow, int headPos, int tailPos, sf::RenderWindow &window, sf::Sprite &background)
+{
+    // posNotDrawingArrow = -1, draw all arrow
+    feature.setLine(highlightLine);
+    mainDraw(window, background);
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].draw(window);
+        if (i > 0 && i != posNotDrawingArrow)
+            drawArrow(window, i, i - 1);
+    }
+    feature.draw(window);
+    drawingHeadTailText(window, headPos, tailPos);
+}
+
+void SLL::delHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    // first line checking empty
+    drawWithHighlight(delHeadCode, 1, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(1000);
+
+    if (SLLSize == 0)
+    {
+        noti.setString("Linked list empty");
+        drawNotification(window, background);
+        return;
+    }
+
+    // second line setting cur = head;
+    nodes[0].setBackgroundColor(sf::Color::Green);
+    drawWithHighlight(delHeadCode, 2, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(1000);
+
+    // third line changing head
+    drawWithHighlight(delHeadCode, 3, -1, 1, SLLSize - 1, window, background);
+    window.display();
+    pause_for(1000);
+
+    // last line deleting nodes
+    bool isDeleteNode = true;
+    while (isDeleteNode)
+    {
+        drawWithHighlight(delHeadCode, 4, -1, 1, SLLSize - 1, window, background);
+        window.display();
+        isDeleteNode = (nodes[0].getRadius() > 0);
+        nodes[0].setRadius(nodes[0].getRadius() - 1);
+    }
+
+    nodes[0].setRadius(30);
+    nodes[0].setBackgroundColor(sf::Color::White);
+    // making changes to linkedlist
+    --SLLSize;
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        nodes[i].setString(nodes[i + 1].getString());
+        nodes[i].setPosition(nodesPos[i + 1]);
+        nodeVal[i] = nodeVal[i + 1];
+    }
+
+    // moving back
+    bool isMoving = true;
+    while (isMoving)
+    {
+        isMoving = false;
+        drawWithHighlight(delHeadCode, 4, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            sf::Vector2f curPos = nodes[i].getPosition();
+            if (curPos != nodesPos[i])
+            {
+                isMoving = true;
+                curPos.x -= 1;
+            }
+            nodes[i].setPosition(curPos);
+        }
+    }
+}
+
+void SLL::delPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    // checking empty
+    drawWithHighlight(delPosCode, 1, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    if (SLLSize == 0)
+    {
+        noti.setString("Linked list empty");
+        drawNotification(window, background);
+        pause_for(500);
+        return;
+    }
+
+    --inputPos;
+    if (inputPos < 0 || inputPos >= SLLSize)
+        return;
+
+    // set cur = head
+    nodes[0].setBackgroundColor(sf::Color::Green);
+    drawWithHighlight(delPosCode, 2, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    // finding delPos
+    for (int i = 0; i < inputPos; ++i)
+    {
+        // for statement
+        drawWithHighlight(delPosCode, 3, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+
+        // last node
+        if (i == inputPos - 1)
+            break;
+
+        // jumping to next node
+        nodes[i].setBackgroundColor(sf::Color::White);
+        nodes[i + 1].setBackgroundColor(sf::Color::Green);
+        drawWithHighlight(delPosCode, 4, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+    }
+
+    // set deletion node, and the next node of it
+    nodes[inputPos].setBackgroundColor(sf::Color::Red);
+    if (inputPos + 1 < SLLSize)
+        nodes[inputPos + 1].setBackgroundColor(sf::Color::Yellow);
+
+    drawWithHighlight(delPosCode, 5, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    // deleting
+    bool isDeleteNode = true;
+    while (isDeleteNode)
+    {
+        drawWithHighlight(delPosCode, 6, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        isDeleteNode = (nodes[inputPos].getRadius() > 0);
+        nodes[inputPos].setRadius(nodes[inputPos].getRadius() - 1);
+    }
+
+    // making changes to array
+    --SLLSize;
+    nodes[inputPos].setBackgroundColor(sf::Color::Yellow);
+    nodes[inputPos].setRadius(30);
+    if (inputPos < 10)
+        nodes[inputPos + 1].setBackgroundColor(sf::Color::White);
+
+    for (int i = inputPos; i < SLLSize; ++i)
+    {
+        nodes[i].setString(nodes[i + 1].getString());
+        nodes[i].setPosition(nodesPos[i + 1]);
+        nodeVal[i] = nodeVal[i + 1];
+    }
+
+    // moving
+    bool isMoving = true;
+    while (isMoving)
+    {
+        isMoving = false;
+        if (inputPos == SLLSize)
+            drawWithHighlight(delPosCode, 6, inputPos, 0, SLLSize, window, background);
+        else
+            drawWithHighlight(delPosCode, 6, inputPos, 0, SLLSize - 1, window, background);
+
+        window.display();
+        for (int i = 0; i < SLLSize; ++i)
+        {
+            sf::Vector2f curPos = nodes[i].getPosition();
+            if (curPos != nodesPos[i])
+            {
+                isMoving = true;
+                curPos.x -= 1;
+            }
+            nodes[i].setPosition(curPos);
+        }
+    }
+    pause_for(500);
+
+    // linking
+    if (inputPos == SLLSize)
+    {
+        drawWithHighlight(delPosCode, 7, -1, 0, SLLSize, window, background);
+        window.display();
+        pause_for(500);
+    }
+    else
+    {
+        drawWithHighlight(delPosCode, 7, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+    }
+
+    // new tail
+    if (inputPos == SLLSize)
+    {
+        drawWithHighlight(delPosCode, 8, -1, 0, SLLSize, window, background);
+        window.display();
+        pause_for(500);
+    }
+
+    drawWithHighlight(delPosCode, 8, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    for (int i = 0; i < 10; ++i)
+        nodes[i].setBackgroundColor(sf::Color::White);
 }
 
 void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
@@ -446,7 +677,7 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
     addPosCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(500);
+    pause_for(500);
 
     // for statement
     for (int i = 0; i < inputPos; ++i)
@@ -463,7 +694,7 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         addPosCode.draw(window);
         drawingHeadTailText(window, 0, SLLSize - 1);
         window.display();
-        _sleep(500);
+        pause_for(500);
 
         // last node
         if (i == inputPos - 1)
@@ -483,7 +714,7 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         addPosCode.draw(window);
         drawingHeadTailText(window, 0, SLLSize - 1);
         window.display();
-        _sleep(500);
+        pause_for(500);
     }
 
     // making changes to array
@@ -505,14 +736,17 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
     for (int j = 0; j < SLLSize; ++j)
     {
         nodes[j].draw(window);
-        if (j == inputPos || j - 1 == inputPos) continue;
+        if (j - 1 == inputPos && j >= 2)
+            drawArrow(window, j, j - 2);
+        if (j == inputPos || j - 1 == inputPos)
+            continue;
         if (j > 0)
             drawArrow(window, j, j - 1);
     }
     addPosCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // moving
     bool isMoving = true;
@@ -540,7 +774,7 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         drawingHeadTailText(window, 0, SLLSize - 1);
         window.display();
     }
-    _sleep(1000);
+    pause_for(1000);
 
     // link added node to next node
     addPosCode.setLine(5);
@@ -556,7 +790,7 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
     addPosCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // link cur node to added node
     addPosCode.setLine(6);
@@ -570,9 +804,10 @@ void SLL::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
     addPosCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
-    for (int i = 0; i < SLLSize; ++i) nodes[i].setBackgroundColor(sf::Color::White);
+    for (int i = 0; i < SLLSize; ++i)
+        nodes[i].setBackgroundColor(sf::Color::White);
 }
 
 void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
@@ -598,7 +833,7 @@ void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
     if (SLLSize > 1)
         drawingHeadTailText(window, 0, SLLSize - 2);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // moving animation
 
@@ -626,7 +861,7 @@ void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
             drawingHeadTailText(window, 0, SLLSize - 2);
         window.display();
     }
-    _sleep(1000);
+    pause_for(1000);
 
     // second frame drawing arrow
     addTailCode.setLine(2);
@@ -642,7 +877,7 @@ void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
     if (SLLSize > 1)
         drawingHeadTailText(window, 0, SLLSize - 2);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // last frame changing head
     addTailCode.setLine(3);
@@ -657,7 +892,7 @@ void SLL::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
     addTailCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     nodes[SLLSize - 1].setBackgroundColor(sf::Color::White);
 }
@@ -692,7 +927,7 @@ void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
     if (SLLSize > 1)
         drawingHeadTailText(window, 1, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // moving animation
 
@@ -720,7 +955,7 @@ void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
             drawingHeadTailText(window, 1, SLLSize - 1);
         window.display();
     }
-    _sleep(1000);
+    pause_for(1000);
 
     // second frame drawing arrow
     addHeadCode.setLine(2);
@@ -736,7 +971,7 @@ void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
     if (SLLSize > 1)
         drawingHeadTailText(window, 1, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     // last frame changing head
     addHeadCode.setLine(3);
@@ -751,7 +986,7 @@ void SLL::addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
     addHeadCode.draw(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     window.display();
-    _sleep(1000);
+    pause_for(1000);
 
     nodes[0].setBackgroundColor(sf::Color::White);
 }
@@ -773,7 +1008,7 @@ void SLL::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
 
     window.display();
 
-    _sleep(1000);
+    pause_for(1000);
 }
 
 void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
@@ -827,7 +1062,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
                 checkHover(ev, window);
                 break;
             case (sf::Event::MouseButtonPressed):
-                mouseClicked(ev, window, screenID);
+                mouseClicked(ev, window, screenID, background);
                 isInputPos = isInputVal = 0;
                 break;
             case (sf::Event::TextEntered):
@@ -853,7 +1088,7 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
                 break;
             case (sf::Event::MouseButtonPressed):
                 if (ev.mouseButton.button == sf::Mouse::Left)
-                    mouseClicked(ev, window, screenID);
+                    mouseClicked(ev, window, screenID, background);
                 break;
             case (sf::Event::KeyPressed):
                 break;
@@ -934,13 +1169,13 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
         window.draw(noti);
     }
     if (SLLisSearching)
-        _sleep(500);
+        pause_for(500);
     else if (frameDelay > 0)
     {
         if (frameDelay > 1)
-            _sleep(500);
+            pause_for(500);
         else
-            _sleep(2000);
+            pause_for(2000);
         --frameDelay;
     }
 }
@@ -981,7 +1216,7 @@ bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
     return false;
 }
 
-void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
+void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     // if (ev.type != sf::Event::MouseButtonReleased) return;
     if (backButton.isMouseOnButton(window))
@@ -1044,11 +1279,7 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
     {
         if (subRemoveButton[0].isMouseOnButton(window))
         {
-            if (SLLSize > 0)
-            {
-                isDeleting[0] = 1;
-                delSLL(0);
-            }
+            delHeadAnimation(window, background);
         }
         else if (subRemoveButton[2].isMouseOnButton(window))
         {
@@ -1057,8 +1288,8 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID)
         }
         else if (subRemoveButton[1].isMouseOnButton(window))
         {
-            isDeleting[SLLSize - 1] = 1;
-            delSLL(SLLSize - 1);
+            inputPos = SLLSize;
+            delPosAnimation(window, background);
         }
     }
 
