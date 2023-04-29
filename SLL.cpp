@@ -51,24 +51,29 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     delHeadCode.setPosition({911, 643});
     delPosCode.loadTexture("Image/SLLdelPosCode.png");
     delPosCode.setPosition({911, 554});
+    updatePosCode.loadTexture("Image/SLLupdatePosCode.png");
+    updatePosCode.setPosition({911, 621});
+
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
     insert = Button("Insert", textColor, font, buttonSize, backgroundColor);
     remove = Button("Remove", textColor, font, buttonSize, backgroundColor);
+    update = Button("Update", textColor, font, buttonSize, backgroundColor);
     backButton = Button("Return", textColor, font, {100, 50}, backgroundColor);
     backButton.setOutlineThickness(4);
 
-    sf::Vector2f position = {100, 550};
+    sf::Vector2f position = {100, 520};
     buttonBox.setOutlineColor(sf::Color::Black);
     buttonBox.setOutlineThickness(4.f);
     buttonBox.setPosition(position);
-    buttonBox.setSize({buttonSize.x, 4 * buttonSize.y});
+    buttonBox.setSize({buttonSize.x, 5 * buttonSize.y});
 
     create.setPosition(position);
     search.setPosition({position.x, position.y + buttonSize.y});
     insert.setPosition({position.x, position.y + 2 * buttonSize.y});
     remove.setPosition({position.x, position.y + 3 * buttonSize.y});
+    update.setPosition({position.x, position.y + 4 * buttonSize.y});
     backButton.setPosition({40, 38});
 
     std::string subCreateName[] = {"Empty", "Random", "Sorted", "Fixed size"};
@@ -146,6 +151,9 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 
     // remove input box
     inputBox[5].setPosition({subInsertButton[2].getPos().x + 60, position.y + 4 * buttonSize.y + 5});
+
+    // update input box
+    inputBox[6].setPosition({update.getPos().x + 160, position.y + 4 * buttonSize.y + 15});
     delayTime = 0.f;
 }
 
@@ -196,6 +204,7 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
     // 3 = insert tail
     // 4 = insert custom position
     // 5 = remove custom position
+    // 6 = update value for position
     switch (pos)
     {
     case 1:
@@ -213,6 +222,9 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
         break;
     case 5:
         delPosAnimation(window, background);
+        break;
+    case 6:
+        updatePosAnimation(window, background);
         break;
     default:
         break;
@@ -409,6 +421,76 @@ void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 
     for (int i = 0; i < SLLSize; ++i)
         nodes[i].setBackgroundColor(sf::Color::White);
+}
+
+void SLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+{
+    --inputPos;
+    // line 1, checking null array
+    drawWithHighlight(updatePosCode, 1, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    if (SLLSize == 0)
+    {
+        noti.setString("Not found value " + toString(searchValue));
+        drawNotification(window, background);
+        return;
+    }
+
+    if (inputPos >= SLLSize) return;
+
+    // set cur = head;
+    nodes[0].setBackgroundColor(sf::Color::Green);
+    drawWithHighlight(updatePosCode, 2, -1, 0, SLLSize - 1, window, background);
+    window.display();
+    pause_for(500);
+
+    // finding update pos
+    for (int i = 0; i <= inputPos; ++i)
+    {
+        // for statement
+        drawWithHighlight(updatePosCode, 3, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+
+        // last node
+        if (i == inputPos) break;
+
+        // jumping to next node
+        nodes[i].setBackgroundColor(sf::Color::White);
+        nodes[i + 1].setBackgroundColor(sf::Color::Green);
+        drawWithHighlight(updatePosCode, 4, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+    }
+
+    // delete old data
+    std::string curData = nodes[inputPos].getString();
+    while (true)
+    {
+        drawWithHighlight(updatePosCode, 5, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+        if (curData == "") break;
+        curData.pop_back();
+        nodes[inputPos].setString(curData);
+    }
+
+    // update new data
+    nodeVal[inputPos] = inputVal;
+    std::string newData = toString(inputVal);
+    std::string tmp = "";
+    for (int i = 0; i < newData.size(); ++i)
+    {
+        tmp += newData[i];
+        nodes[inputPos].setString(tmp);
+        drawWithHighlight(updatePosCode, 5, -1, 0, SLLSize - 1, window, background);
+        window.display();
+        pause_for(500);
+    }
+
+    nodes[inputPos].setBackgroundColor(sf::Color::White);
 }
 
 void SLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
@@ -1021,6 +1103,7 @@ void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     search.drawButton(window);
     insert.drawButton(window);
     remove.drawButton(window);
+    update.drawButton(window);
 
     if (isInputPos || isInputVal)
         inputBox[currInputBox].drawTo(window);
@@ -1192,6 +1275,8 @@ bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
         return true;
     if (remove.hoverChangeColor(ev, window))
         return true;
+    if (update.hoverChangeColor(ev, window))
+        return true;
 
     if (drawSubCreate)
         for (int i = 0; i < 4; ++i)
@@ -1244,6 +1329,11 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, s
     {
         drawSubRemove = !drawSubRemove;
         drawSubCreate = drawSubInsert = drawSubSearch = 0;
+    }
+    else if (update.isMouseOnButton(window))
+    {
+        isInputPos = 1;
+        currInputBox = 6;
     }
 
     if (drawSubCreate)

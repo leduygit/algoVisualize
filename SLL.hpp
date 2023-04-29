@@ -52,10 +52,11 @@ public:
     void addPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void delHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void delPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background);
 
 
 private:
-    Button create, search, insert, remove, backButton;
+    Button create, search, insert, remove, update, backButton;
     sf::RectangleShape buttonBox;
 
     bool drawSubCreate;
@@ -108,5 +109,6 @@ private:
     Highlight addPosCode;
     Highlight delHeadCode;
     Highlight delPosCode;
+    Highlight updatePosCode;
 };
 #endif
