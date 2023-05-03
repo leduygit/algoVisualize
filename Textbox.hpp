@@ -41,6 +41,8 @@ public:
 	// Get user input:
 	void inputLogic(int charTyped);
 
+	sf::Vector2f getPosition();
+
 private:
 	sf::Text textbox;
 

@@ -10,6 +10,7 @@
 #include <math.h>
 #include <chrono>
 #include <thread>
+#include <fstream>
 
 #define sleepFor(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
@@ -24,15 +25,7 @@ public:
     // create function
     void randomSLL();
     void randomSortedSLL();
-
-    // insert function
-    void addSLL(int pos);
-
-    // delete function
-    void delSLL(int pos);
-
-    // search function
-    void SLLclearSearching();
+    void inputFromFile(sf::RenderWindow &window, sf::Sprite &background);
 
     // input function
     void handleInput(sf::RenderWindow &window, sf::Sprite &background);
@@ -110,5 +103,9 @@ private:
     Highlight delHeadCode;
     Highlight delPosCode;
     Highlight updatePosCode;
+
+    // title text
+    sf::Text title;
+    sf::Text inputTitle;
 };
 #endif

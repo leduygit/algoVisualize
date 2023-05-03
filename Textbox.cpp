@@ -24,6 +24,11 @@ void Textbox::setPosition(sf::Vector2f point)
     textbox.setPosition(point);
 }
 
+sf::Vector2f Textbox::getPosition()
+{
+    return textbox.getPosition();
+}
+
 // Set char limits:
 void Textbox::setLimit(bool ToF)
 {

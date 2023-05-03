@@ -1,4 +1,17 @@
 #include "SLL.hpp"
+std::string toString(int x)
+{
+    std::string num = "";
+    if (x == 0)
+        num += '0';
+    while (x)
+    {
+        num += ('0' + x % 10);
+        x /= 10;
+    }
+    reverse(num.begin(), num.end());
+    return num;
+}
 
 void pause_for(int pauseTime)
 {
@@ -22,14 +35,24 @@ int randInt(int l, int r)
 
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
+    title.setFont(font);
+    title.setString("Singly Linked List");
+    title.setCharacterSize(30);
+    title.setStyle(sf::Text::Italic);
+    title.setPosition({250, 60});
+    title.setFillColor(sf::Color::Black);
+
     headText.setFillColor(sf::Color::Black);
     tailText.setFillColor(sf::Color::Black);
+    inputTitle.setFillColor(sf::Color::Black);
     headText.setFont(font);
     tailText.setFont(font);
+    inputTitle.setFont(font);
     headText.setString("Head");
     tailText.setString("Tail");
     tailText.setCharacterSize(20);
     headText.setCharacterSize(20);
+    inputTitle.setCharacterSize(20);
 
     noti.setFillColor(sf::Color::Black);
     noti.setFont(font);
@@ -76,7 +99,7 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     update.setPosition({position.x, position.y + 4 * buttonSize.y});
     backButton.setPosition({40, 38});
 
-    std::string subCreateName[] = {"Empty", "Random", "Sorted", "Fixed size"};
+    std::string subCreateName[] = {"Empty", "Random", "Sorted", "File"};
 
     sf::Vector2f subSize = {150, 50};
     sf::Vector2f subCreatePos = {position.x + buttonSize.x + 20, position.y};
@@ -139,22 +162,55 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     }
 
     // create input box
-    inputBox[0].setPosition({subCreateButton[3].getPos().x + 60, position.y + buttonSize.y + 5});
+    inputBox[0].setPosition({subCreateButton[3].getPos().x + 100, position.y + buttonSize.y + 5});
 
     // search input box
-    inputBox[1].setPosition({subSearchButton[0].getPos().x + 60, position.y + 2 * buttonSize.y + 5});
+    inputBox[1].setPosition({subSearchButton[0].getPos().x + 100, position.y + 2 * buttonSize.y + 5});
 
     // insert input box
-    inputBox[2].setPosition({subInsertButton[0].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
-    inputBox[3].setPosition({subInsertButton[1].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
-    inputBox[4].setPosition({subInsertButton[2].getPos().x + 60, position.y + 3 * buttonSize.y + 5});
+    inputBox[2].setPosition({subInsertButton[0].getPos().x + 100, position.y + 3 * buttonSize.y + 5});
+    inputBox[3].setPosition({subInsertButton[1].getPos().x + 100, position.y + 3 * buttonSize.y + 5});
+    inputBox[4].setPosition({subInsertButton[2].getPos().x + 100, position.y + 3 * buttonSize.y + 5});
 
     // remove input box
-    inputBox[5].setPosition({subInsertButton[2].getPos().x + 60, position.y + 4 * buttonSize.y + 5});
+    inputBox[5].setPosition({subInsertButton[2].getPos().x + 100, position.y + 4 * buttonSize.y + 5});
 
     // update input box
-    inputBox[6].setPosition({update.getPos().x + 160, position.y + 4 * buttonSize.y + 15});
+    inputBox[6].setPosition({update.getPos().x + 210, position.y + 4 * buttonSize.y + 15});
     delayTime = 0.f;
+}
+
+void SLL::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
+{
+    std::ifstream fi;
+    fi.open("data.txt");
+    if (!fi.is_open()) 
+    {
+        noti.setString("Can't found data.txt, please input from data.txt");
+        drawNotification(window, background);
+        return;
+    }
+    fi >> SLLSize;
+    if (SLLSize > 10)
+    {
+        SLLSize = 0;
+        noti.setString("Size must be from 1 to 10");
+        drawNotification(window, background);
+        return;
+    }
+    for (int i = 0; i < SLLSize; ++i)
+    {
+        fi >> nodeVal[i];
+        if (nodeVal[i] > 100 || nodeVal[i] < 0)
+        {
+            SLLSize = 0;
+            noti.setString("Value must be from 1 to 100");
+            drawNotification(window, background);
+            return;
+        }
+        nodes[i].setString(toString(nodeVal[i]));
+    }
+    fi.close();
 }
 
 void SLL::drawArrow(sf::RenderWindow &window, int i, int j)
@@ -205,6 +261,22 @@ void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &backgroun
     // 4 = insert custom position
     // 5 = remove custom position
     // 6 = update value for position
+    if (inputPos > SLLSize)
+    {
+        noti.setString("Position must be from 1 to " + toString(SLLSize));
+        drawNotification(window, background);
+        inputPos = 0;
+        return;
+    }
+
+    if (inputVal > 100)
+    {
+        noti.setString("Value must be from 0 to 100");
+        drawNotification(window, background);
+        inputVal = 0;
+        return;
+    }
+
     switch (pos)
     {
     case 1:
@@ -240,6 +312,7 @@ void SLL::handleInput(sf::RenderWindow &window, sf::Sprite &background)
         inputBox[currInputBox].setText("");
         if (currInputBox == 5)
         {
+            inputVal = 0;
             handleFeature(currInputBox, window, background);
             return;
         }
@@ -254,19 +327,6 @@ void SLL::handleInput(sf::RenderWindow &window, sf::Sprite &background)
     }
 }
 
-std::string toString(int x)
-{
-    std::string num = "";
-    if (x == 0)
-        num += '0';
-    while (x)
-    {
-        num += ('0' + x % 10);
-        x /= 10;
-    }
-    reverse(num.begin(), num.end());
-    return num;
-}
 
 void SLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
@@ -1104,9 +1164,18 @@ void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     insert.drawButton(window);
     remove.drawButton(window);
     update.drawButton(window);
+    window.draw(title);
 
-    if (isInputPos || isInputVal)
+    if (isInputPos || isInputVal){
         inputBox[currInputBox].drawTo(window);
+        if (isInputPos)
+            inputTitle.setString("Index: ");
+        else
+            inputTitle.setString("Value: ");
+        sf::Vector2f inputPos = inputBox[currInputBox].getPosition();
+        inputTitle.setPosition({inputPos.x - 75, inputPos.y});
+        window.draw(inputTitle);
+    }
 
     if (drawSubCreate)
         for (int i = 0; i < 4; ++i)
@@ -1189,78 +1258,14 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
     mainDraw(window, background);
     bool colorNewNode = 0;
 
-    for (int i = 0; i < SLLSize; ++i)
-    {
-        if (SLLisSearching && !colorNewNode && !nodeSearch[i])
-        {
-            colorNewNode = 1;
-            nodeSearch[i] = 1;
-            if (nodeVal[i] == searchValue)
-            {
-                nodes[i].setBackgroundColor(sf::Color::Red);
-                isNoti = true;
-                noti.setString("found at index " + toString(i + 1));
-                SLLisSearching = 0;
-                doneSearching = 1;
-                frameDelay = 2;
-            }
-            else
-            {
-                nodes[i].setBackgroundColor(sf::Color::Green);
-                if (i == SLLSize - 1 && SLLisSearching)
-                {
-                    isNoti = true;
-                    noti.setString("not found value " + toString(searchValue));
-                    doneSearching = 1;
-                    frameDelay = 1;
-                }
-            }
-        }
-        if (isDeleting[i])
-        {
-            nodes[i].setRadius(nodes[i].getRadius() - 1.f);
-            nodes[i].draw(window);
-            if (nodes[i].getRadius() == 0)
-            {
-                isDeleting[i] = 0;
-                nodes[i].setRadius(30.f);
-                delSLL(i);
-            }
-            continue;
-        }
-        nodes[i].draw(window);
-        sf::Vector2f curPos = nodes[i].getPosition();
-        if (curPos == nodesPos[i])
-            continue;
-        if (curPos.y > nodesPos[i].y)
-            nodes[i].setPosition({curPos.x, curPos.y - 2});
-        else if (curPos.x > nodesPos[i].x)
-            nodes[i].setPosition({curPos.x - 2, curPos.y});
-        else if (curPos.x < nodesPos[i].x)
-            nodes[i].setPosition({curPos.x + 2, curPos.y});
-    }
+    for (int i = 0; i < SLLSize; ++i) nodes[i].draw(window);
+    
 
     for (int i = 1; i < SLLSize; ++i)
         drawArrow(window, i, i - 1);
     // drawArrow(window);
     drawingHeadTailText(window, 0, SLLSize - 1);
     // addHeadCode.draw(window);
-    if (isNoti)
-    {
-        isNoti = false;
-        notiFrog.draw(window);
-        window.draw(noti);
-    }
-    if (SLLisSearching)
-        pause_for(500);
-    else if (frameDelay > 0)
-    {
-        if (frameDelay > 1)
-            pause_for(500);
-        else
-            pause_for(2000);
-        --frameDelay;
-    }
 }
 
 bool SLL::checkHover(sf::Event &ev, sf::RenderWindow &window)
@@ -1334,6 +1339,7 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, s
     {
         isInputPos = 1;
         currInputBox = 6;
+        drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
     }
 
     if (drawSubCreate)
@@ -1344,6 +1350,8 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, s
             randomSLL();
         else if (subCreateButton[2].isMouseOnButton(window))
             randomSortedSLL();
+        else if (subCreateButton[3].isMouseOnButton(window))
+            inputFromFile(window, background);
     }
 
     if (drawSubInsert)
@@ -1388,11 +1396,9 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, s
         if (subSearchButton[0].isMouseOnButton(window))
         {
             isInputVal = 1;
+            inputPos = 0;
             currInputBox = 1;
             inputBox[1].setSelected(1);
-            doneSearching = 0;
-            for (int i = 0; i < SLLSize; ++i)
-                nodeSearch[i] = 0;
         }
     }
 }
@@ -1420,53 +1426,4 @@ void SLL::randomSortedSLL()
         nodes[i].setString(toString(x));
         nodes[i].setPosition(nodesPos[i]);
     }
-}
-
-void SLL::addSLL(int pos)
-{
-    if (pos > SLLSize || pos < 0)
-        return;
-    if (SLLSize >= 10)
-        return;
-    for (int i = SLLSize + 1; i > pos; --i)
-    {
-        nodes[i].setString(nodes[i - 1].getString());
-        nodes[i].setPosition(nodesPos[i - 1]);
-        nodeVal[i] = nodeVal[i - 1];
-    }
-
-    ++SLLSize;
-    // for (int i = 0; i < pos; ++i) nodes[i].setPosition(nodesPos[i - 1]);
-    int val = inputVal;
-    nodeVal[pos] = val;
-    nodes[pos].setString(toString(val));
-    nodes[pos].setPosition({nodesPos[pos].x, 300});
-}
-
-void SLL::delSLL(int pos)
-{
-    if (pos > SLLSize - 1 || pos < 0)
-        return;
-    if (SLLSize <= 0)
-        return;
-    if (isDeleting[pos])
-        return;
-    for (int i = pos; i < SLLSize; ++i)
-    {
-        nodes[i].setPosition(nodesPos[i + 1]);
-        nodes[i].setString(nodes[i + 1].getString());
-        nodeVal[i] = nodeVal[i + 1];
-    }
-    --SLLSize;
-}
-
-void SLL::SLLclearSearching()
-{
-    for (int i = 0; i < SLLSize; ++i)
-    {
-        nodes[i].setBackgroundColor(sf::Color::White);
-        nodeSearch[i] = 0;
-    }
-    doneSearching = 0;
-    SLLisSearching = 0;
 }

@@ -15,6 +15,21 @@ void menuInitialize(Menu &menu, sf::Font &font)
     menu.setOutlineThickness(6);
 }
 
+void changeScreen(int oldID, int newID)
+{
+    // menu = 1
+    // database menu = 2
+    // setting = 3
+    // static = 4
+    // dynamic = 5
+    // singly = 6
+    // doubly = 7
+    // circular = 8
+    // stack = 9
+    // queue = 10
+    
+}
+
 int main()
 {
     srand(time(NULL));
