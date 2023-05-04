@@ -7,6 +7,7 @@
 #include "Textbox.hpp"
 #include "Image.hpp"
 #include "Highlight.hpp"
+#include "Global.hpp"
 #include <math.h>
 #include <chrono>
 #include <thread>
@@ -47,6 +48,9 @@ public:
     void delPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background);
 
+    // pause function
+    void pause_for(int pauseTime);
+
 
 private:
     Button create, search, insert, remove, update, backButton;
@@ -75,17 +79,11 @@ private:
     sf::Vector2f nodesPos[11];
     int nodeVal[11];
 
-    bool isDeleting[11];
-    bool SLLisSearching = 0, doneSearching = 0, nodeSearch[11];
     int searchValue;
-    
-    int frameDelay = 0;
 
     bool isInputVal, isInputPos;
     int currInputBox, inputVal, inputPos;
     Textbox inputBox[8];
-
-    float delayTime;
 
     // head/tail text
     sf::Text headText, tailText;

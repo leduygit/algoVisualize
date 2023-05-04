@@ -4,6 +4,7 @@
 #include "LLNode.hpp"
 #include "SLL.hpp"
 #include "Textbox.hpp"
+#include "Stack.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -27,7 +28,7 @@ void changeScreen(int oldID, int newID)
     // circular = 8
     // stack = 9
     // queue = 10
-    
+
 }
 
 int main()
@@ -55,8 +56,12 @@ int main()
     dataMenu.setPosition({30, 280});
 
     // SLL menu setup
-    sf::Vector2f SinglyButtonSize = {100, 50};
-    SLL SinglyMenu(textColor, consolas, SinglyButtonSize, sf::Color::White);
+    sf::Vector2f featureButtonSize = {100, 50};
+    SLL SinglyMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
+    // Stack menu setup
+    Stack StackMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
 
     // background image
     sf::Texture texture;
@@ -87,8 +92,26 @@ int main()
         case 1:
             menu.handleEvent(ev, window, screenID, background);
             break;
+        case 2:
+            dataMenu.handleEvent(ev, window, screenID, background);
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
         case 6:
             SinglyMenu.handleEvent(ev, window, screenID, featureBack);
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            StackMenu.handleEvent(ev, window, screenID, featureBack);
+            break;
+        case 10:
             break;
         default:
             dataMenu.handleEvent(ev, window, screenID, background);

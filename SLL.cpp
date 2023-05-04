@@ -1,19 +1,6 @@
 #include "SLL.hpp"
-std::string toString(int x)
-{
-    std::string num = "";
-    if (x == 0)
-        num += '0';
-    while (x)
-    {
-        num += ('0' + x % 10);
-        x /= 10;
-    }
-    reverse(num.begin(), num.end());
-    return num;
-}
 
-void pause_for(int pauseTime)
+void SLL::pause_for(int pauseTime)
 {
     std::chrono::milliseconds duration = std::chrono::milliseconds(pauseTime);
     auto start_time = std::chrono::steady_clock::now();
@@ -26,15 +13,9 @@ void pause_for(int pauseTime)
     }
 }
 
-int randInt(int l, int r)
-{
-    if (l > r)
-        return r;
-    return l + rand() % (r - l + 1);
-}
-
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
+    SLLSize = 0;
     title.setFont(font);
     title.setString("Singly Linked List");
     title.setCharacterSize(30);
@@ -152,7 +133,6 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
         // (width, height, tipWidth, tipHeight), in this case the arrow is horizontal
         arrow[i] = ArrowShape(70, 8, 15, 15);
         arrow[i].setColor(sf::Color::Black);
-        isDeleting[i] = 0;
     }
 
     for (int i = 0; i < 8; ++i)
@@ -177,7 +157,6 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 
     // update input box
     inputBox[6].setPosition({update.getPos().x + 210, position.y + 4 * buttonSize.y + 15});
-    delayTime = 0.f;
 }
 
 void SLL::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
@@ -242,14 +221,6 @@ void SLL::drawArrow(sf::RenderWindow &window, int i, int j)
 
     // window.draw(arrow[5]);
     window.draw(arrow[i]);
-}
-
-int stringToInt(std::string t)
-{
-    int x = 0;
-    for (char c : t)
-        x = x * 10 + (c - '0');
-    return x;
 }
 
 void SLL::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &background)
@@ -1312,7 +1283,7 @@ void SLL::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, s
     if (backButton.isMouseOnButton(window))
     {
         SLLSize = 0;
-        screenID = 3;
+        screenID = 2;
         return;
     }
     if (create.isMouseOnButton(window))
