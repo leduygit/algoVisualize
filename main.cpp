@@ -5,6 +5,7 @@
 #include "SLL.hpp"
 #include "Textbox.hpp"
 #include "Stack.hpp"
+#include "Queue.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -62,6 +63,10 @@ int main()
     // Stack menu setup
     Stack StackMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
+    // Queue menu setup
+    Queue queueMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
+
 
     // background image
     sf::Texture texture;
@@ -112,6 +117,7 @@ int main()
             StackMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 10:
+            queueMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         default:
             dataMenu.handleEvent(ev, window, screenID, background);

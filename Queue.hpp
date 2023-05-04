@@ -1,5 +1,5 @@
-#ifndef _Stack_H_
-#define _Stack_H_
+#ifndef _Queue_H_
+#define _Queue_H_
 #include "ArrowLine.hpp"
 #include "Button.hpp"
 #include "LLNode.hpp"
@@ -15,17 +15,17 @@
 
 #define sleepFor(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
-class Stack
+class Queue
 {
 public:
-    Stack(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
+    Queue(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
     void drawArrow(sf::RenderWindow &window, int i, int j);
 
     // create function
-    void randomStack();
-    void randomSortedStack();
+    void randomQueue();
+    void randomSortedQueue();
     void inputFromFile(sf::RenderWindow &window, sf::Sprite &background);
 
     // input function
@@ -40,29 +40,18 @@ public:
     void drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail);
 
     // animation function
-    void addHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
+    void addTailAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void delHeadAnimation(sf::RenderWindow &window, sf::Sprite &background);
-
-    // pause function
-    void pause_for(int pauseTime);
-
-
 private:
     Button create, insert, remove, backButton;
     sf::RectangleShape buttonBox;
 
     bool drawSubCreate;
     Button subCreateButton[4];
-
-    bool drawSubInsert;
-    Button subInsertButton[3];
-
-    bool drawSubRemove;
-    Button subRemoveButton[3];
     
 
     // smaller than 10
-    int StackSize = 0;
+    int QueueSize = 0;
     LLNode nodes[11];
     ArrowShape arrow[11];
 
@@ -85,7 +74,7 @@ private:
     Image notiFrog;
 
     // code hightlight image
-    Highlight addHeadCode;
+    Highlight addTailCode;
     Highlight delHeadCode;
 
     // title text

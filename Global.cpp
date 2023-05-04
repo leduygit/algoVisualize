@@ -28,3 +28,16 @@ int randInt(int l, int r)
         return r;
     return l + rand() % (r - l + 1);
 }
+
+void pause_for(int pauseTime)
+{
+    std::chrono::milliseconds duration = std::chrono::milliseconds(pauseTime);
+    auto start_time = std::chrono::steady_clock::now();
+    auto end_time = start_time + duration;
+
+    while (std::chrono::steady_clock::now() < end_time)
+    {
+        // Do other work while waiting
+        std::this_thread::yield();
+    }
+}
