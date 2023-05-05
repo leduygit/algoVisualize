@@ -6,6 +6,7 @@
 #include "Textbox.hpp"
 #include "Stack.hpp"
 #include "Queue.hpp"
+#include "DLL.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -56,6 +57,17 @@ int main()
     dataMenu.setupDatabaseMenu(textColor, consolas, menuButtonSize, sf::Color::White);
     dataMenu.setPosition({30, 280});
 
+    // menu = 1
+    // database menu = 2
+    // setting = 3
+    // static = 4
+    // dynamic = 5
+    // singly = 6
+    // doubly = 7
+    // circular = 8
+    // stack = 9
+    // queue = 10
+
     // SLL menu setup
     sf::Vector2f featureButtonSize = {100, 50};
     SLL SinglyMenu(textColor, consolas, featureButtonSize, sf::Color::White);
@@ -65,6 +77,9 @@ int main()
 
     // Queue menu setup
     Queue queueMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
+    // DLL menu setup
+    DLL DoublyMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
 
 
@@ -85,6 +100,8 @@ int main()
     // 2 = Database Menu
     // 3 = Setting
     // 6 = Singly linked list
+
+   
 
 
 
@@ -110,6 +127,7 @@ int main()
             SinglyMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 7:
+            DoublyMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 8:
             break;
