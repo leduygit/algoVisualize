@@ -48,9 +48,6 @@ public:
     void delPosAnimation(sf::RenderWindow &window, sf::Sprite &background);
     void updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background);
 
-    // pause function
-    void pause_for(int pauseTime);
-
 
 private:
     Button create, search, insert, remove, update, backButton;

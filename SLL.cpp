@@ -1,17 +1,5 @@
 #include "SLL.hpp"
 
-void SLL::pause_for(int pauseTime)
-{
-    std::chrono::milliseconds duration = std::chrono::milliseconds(pauseTime);
-    auto start_time = std::chrono::steady_clock::now();
-    auto end_time = start_time + duration;
-
-    while (std::chrono::steady_clock::now() < end_time)
-    {
-        // Do other work while waiting
-        std::this_thread::yield();
-    }
-}
 
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
@@ -38,7 +26,6 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     noti.setFillColor(sf::Color::Black);
     noti.setFont(font);
     noti.setPosition({580, 420});
-    noti.setString("testing");
     noti.setCharacterSize(60);
 
     notiFrog.loadTexture("Image/notifrog.png");
@@ -1227,7 +1214,6 @@ void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
     // }
 
     mainDraw(window, background);
-    bool colorNewNode = 0;
 
     for (int i = 0; i < SLLSize; ++i) nodes[i].draw(window);
     

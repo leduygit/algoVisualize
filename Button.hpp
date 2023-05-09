@@ -22,6 +22,8 @@ public:
 
     void drawButton(sf::RenderWindow &window);
 
+    void setString(std::string s);
+
     bool isMouseOnButton(sf::RenderWindow &window);
 
     sf::Vector2f getPos();

@@ -7,6 +7,7 @@
 #include "Stack.hpp"
 #include "Queue.hpp"
 #include "DLL.hpp"
+#include "StaticArray.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -81,6 +82,8 @@ int main()
     // DLL menu setup
     DLL DoublyMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
+    // Static Array menu setup
+    StaticArray StaticMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
 
     // background image
@@ -120,6 +123,7 @@ int main()
         case 3:
             break;
         case 4:
+            StaticMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 5:
             break;

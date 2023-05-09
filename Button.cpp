@@ -49,6 +49,17 @@ void Button::setPosition(sf::Vector2f pos)
     text.setPosition({xPos, yPos});
 }
 
+void Button::setString(std::string s)
+{
+    text.setString(s);
+
+    sf::Vector2f pos = button.getPosition();
+    float xPos = pos.x + (button.getGlobalBounds().width - text.getLocalBounds().width) / 2.2;
+    float yPos = pos.y + text.getLocalBounds().height / 1.2;
+
+    text.setPosition({xPos, yPos});
+}
+
 void Button::drawButton(sf::RenderWindow &window)
 {
     window.draw(button);
