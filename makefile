@@ -13,6 +13,6 @@ all: compile link run
 compile:
 	g++ -c $(SOURCE).cpp *.hpp *.cpp -I $(INCLUDE)
 link:
-	g++ $(CXXFLAGS) $(SOURCE).o button.o menu.o databasemenu.o arrowline.o LLNode.o SLL.o Textbox.o Image.o Highlight.o Stack.o Queue.o Global.o DLL.o ArrNode.o StaticArray.o -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
+	g++ $(CXXFLAGS) $(SOURCE).o button.o menu.o databasemenu.o arrowline.o LLNode.o SLL.o Textbox.o Image.o Highlight.o Stack.o Queue.o Global.o DLL.o ArrNode.o StaticArray.o DynamicArray.o -o main -L $(LIBRARY) $(SFMLFLAGS) $(SFML_INCLUDE)
 run:
 	./${SOURCE}.exe

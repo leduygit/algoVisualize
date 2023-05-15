@@ -1,10 +1,10 @@
-#include "StaticArray.hpp"
+#include "DynamicArray.hpp"
 
-StaticArray::StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
+DynamicArray::DynamicArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
-    usedSize = 0;
+    SASize = usedSize = 0;
     title.setFont(font);
-    title.setString("Static Array");
+    title.setString("Dynamic Array");
     title.setCharacterSize(30);
     title.setStyle(sf::Text::Italic);
     title.setPosition({250, 60});
@@ -59,10 +59,10 @@ StaticArray::StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f butto
     remove.setPosition({position.x, position.y + 4 * buttonSize.y});
     backButton.setPosition({40, 38});
 
-    std::string subCreateName[] = {"Empty", "Random", "File"};
+    std::string subCreateName[] = {"Empty", "Random", "File", "Allocate"};
     sf::Vector2f subSize = {150, 50};
     sf::Vector2f subCreatePos = {position.x + buttonSize.x + 20, position.y};
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         subCreateButton[i] = Button(subCreateName[i], textColor, font, subSize, backgroundColor);
         subCreateButton[i].setPosition(subCreatePos);
@@ -107,9 +107,12 @@ StaticArray::StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f butto
 
     // remove input box
     inputBox[4].setPosition({remove.getPos().x + 210, position.y + 4 * buttonSize.y + 15});
+
+    // allocate input box
+    inputBox[5].setPosition({subCreateButton[3].getPos().x + 100, position.y + buttonSize.y + 5});
 }
 
-bool StaticArray::checkHover(sf::Event &ev, sf::RenderWindow &window)
+bool DynamicArray::checkHover(sf::Event &ev, sf::RenderWindow &window)
 {
     if (backButton.hoverChangeColor(ev, window))
         return true;
@@ -125,7 +128,7 @@ bool StaticArray::checkHover(sf::Event &ev, sf::RenderWindow &window)
         return true;
 
     if (drawSubCreate)
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 4; ++i)
             if (subCreateButton[i].hoverChangeColor(ev, window))
                 return true;
     if (drawSubAcess)
@@ -136,7 +139,7 @@ bool StaticArray::checkHover(sf::Event &ev, sf::RenderWindow &window)
     return false;
 }
 
-void StaticArray::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
+void DynamicArray::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     if (backButton.isMouseOnButton(window))
     {
@@ -175,11 +178,21 @@ void StaticArray::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &scr
     if (drawSubCreate)
     {
         if (subCreateButton[0].isMouseOnButton(window))
+        {
             usedSize = 0;
+            SASize = 0;
+            for (int i = 0; i < arrMaxSize; ++i)
+                nodes[i].setString("0");
+        }
         else if (subCreateButton[1].isMouseOnButton(window))
             randomArray();
         else if (subCreateButton[2].isMouseOnButton(window))
             inputFromFile(window, background);
+        else if (subCreateButton[3].isMouseOnButton(window))
+        {
+            isInputVal = 1;
+            currInputBox = 5;
+        }
     }
     else if (drawSubAcess)
     {
@@ -196,8 +209,9 @@ void StaticArray::mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &scr
     }
 }
 
-void StaticArray::randomArray()
+void DynamicArray::randomArray()
 {
+    // SASize = randInt(0, arrMaxSize);
     usedSize = randInt(0, SASize);
     for (int i = 0; i < usedSize; ++i)
     {
@@ -210,7 +224,7 @@ void StaticArray::randomArray()
         nodes[i].setString("0");
 }
 
-void StaticArray::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
 {
     std::ifstream fi;
     fi.open("data.txt");
@@ -240,10 +254,24 @@ void StaticArray::inputFromFile(sf::RenderWindow &window, sf::Sprite &background
         }
         nodes[i].setString(toString(nodeVal[i]));
     }
+    for (int i = usedSize; i < SASize; ++i)
+        nodes[i].setString("0");
+        
     fi.close();
 }
 
-void StaticArray::handleInput(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::allocateArray(sf::RenderWindow &window, sf::Sprite &background)
+{
+    if (inputVal > arrMaxSize)
+    {
+        noti.setString("Out of bound");
+        drawNotification(window, background);
+        return;
+    }
+    SASize = inputVal;
+}
+
+void DynamicArray::handleInput(sf::RenderWindow &window, sf::Sprite &background)
 {
     if (isInputPos)
     {
@@ -267,7 +295,7 @@ void StaticArray::handleInput(sf::RenderWindow &window, sf::Sprite &background)
     }
 }
 
-void StaticArray::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &background)
 {
     if (inputVal > 99)
     {
@@ -294,12 +322,15 @@ void StaticArray::handleFeature(int pos, sf::RenderWindow &window, sf::Sprite &b
     case 4:
         delPosAnimation(window, background);
         break;
+    case 5:
+        allocateArray(window, background);
+        break;
     default:
         break;
     }
 }
 
-void StaticArray::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
+void DynamicArray::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
     if (isInputPos || isInputVal)
     {
@@ -354,7 +385,7 @@ void StaticArray::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &scre
         nodes[i].draw(window);
 }
 
-void StaticArray::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
 {
     window.clear();
     window.draw(background);
@@ -373,7 +404,12 @@ void StaticArray::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
         if (isInputPos)
             inputTitle.setString("Index: ");
         else
-            inputTitle.setString("Value: ");
+        {
+            if (currInputBox == 5)
+                inputTitle.setString("Size: ");
+            else
+                inputTitle.setString("Value: ");
+        }
         sf::Vector2f inputPos = inputBox[currInputBox].getPosition();
         inputTitle.setPosition({inputPos.x - 75, inputPos.y});
         window.draw(inputTitle);
@@ -410,7 +446,7 @@ void StaticArray::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     }
 }
 
-void StaticArray::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
 {
     mainDraw(window, background);
     for (int i = 0; i < SASize; ++i)
@@ -421,7 +457,7 @@ void StaticArray::drawNotification(sf::RenderWindow &window, sf::Sprite &backgro
     pause_for(1000);
 }
 
-void StaticArray::drawWithHighlight(Highlight feature, int hightlightLine, sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::drawWithHighlight(Highlight feature, int hightlightLine, sf::RenderWindow &window, sf::Sprite &background)
 {
     feature.setLine(hightlightLine);
     mainDraw(window, background);
@@ -430,7 +466,7 @@ void StaticArray::drawWithHighlight(Highlight feature, int hightlightLine, sf::R
     feature.draw(window);
 }
 
-void StaticArray::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     for (int i = 0; i <= usedSize; ++i)
     {
@@ -468,12 +504,13 @@ void StaticArray::searchAnimation(sf::RenderWindow &window, sf::Sprite &backgrou
     window.display();
     pause_for(350);
     noti.setString("Not found value " + toString(inputVal));
+    drawNotification(window, background);
     return;
 }
-void StaticArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
-    if (usedSize == arrMaxSize || inputPos < 0 || inputPos > usedSize)
+    if (usedSize == arrMaxSize || inputPos < 0 || inputPos > usedSize || inputPos > SASize)
     {
         noti.setString("Out of bound");
         drawNotification(window, background);
@@ -523,11 +560,10 @@ void StaticArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &backgrou
 
     nodes[inputPos].setBackgroundColor(sf::Color::White);
 }
-void StaticArray::delPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::delPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
-    if (inputPos >= usedSize || inputPos < 0)
-    {
+    if (inputPos >= usedSize || inputPos < 0){
         noti.setString("Out of bound");
         drawNotification(window, background);
         return;
@@ -563,7 +599,7 @@ void StaticArray::delPosAnimation(sf::RenderWindow &window, sf::Sprite &backgrou
     window.display();
     pause_for(430);
 }
-void StaticArray::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
     if (inputPos >= usedSize || inputPos < 0)
@@ -587,7 +623,7 @@ void StaticArray::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &backg
     nodes[inputPos].setBackgroundColor(sf::Color::White);
 }
 
-void StaticArray::peekPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
+void DynamicArray::peekPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
     if (inputPos >= usedSize || inputPos < 0)

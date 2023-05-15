@@ -1,5 +1,5 @@
-#ifndef _StaticArray_H_
-#define _StaticArray_H
+#ifndef _DynamicArray_H_
+#define _DynamicArray_H
 #include "ArrowLine.hpp"
 #include "Button.hpp"
 #include "ArrNode.hpp"
@@ -14,7 +14,7 @@
 #include <fstream>
 
 #define arrMaxSize 20
-class StaticArray
+class DynamicArray
 {
 private:
     Button create, search, insert, remove, access, backButton;
@@ -28,7 +28,7 @@ private:
     
 
     // smaller than 10
-    const int SASize = arrMaxSize;
+    int SASize = 0;
     int usedSize = 0;
     ArrNode nodes[arrMaxSize + 4];
     ArrowShape arrow[arrMaxSize + 4];
@@ -60,13 +60,14 @@ private:
     sf::Text inputTitle;
     sf::Text index;
 public:
-    StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
+    DynamicArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor);
     bool checkHover(sf::Event &ev, sf::RenderWindow &window);
     void mouseClicked(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background);
 
     // create function
     void randomArray();
     void inputFromFile(sf::RenderWindow &window, sf::Sprite &background);
+    void allocateArray(sf::RenderWindow &window, sf::Sprite &background);
 
     // input function
     void handleInput(sf::RenderWindow &window, sf::Sprite &background);

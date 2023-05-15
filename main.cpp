@@ -8,6 +8,7 @@
 #include "Queue.hpp"
 #include "DLL.hpp"
 #include "StaticArray.hpp"
+#include "DynamicArray.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -85,6 +86,9 @@ int main()
     // Static Array menu setup
     StaticArray StaticMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
+    // Dynamic Array menu setup
+    DynamicArray DynamicMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
 
     // background image
     sf::Texture texture;
@@ -126,6 +130,7 @@ int main()
             StaticMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 5:
+            DynamicMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 6:
             SinglyMenu.handleEvent(ev, window, screenID, featureBack);
