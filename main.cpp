@@ -9,6 +9,7 @@
 #include "DLL.hpp"
 #include "StaticArray.hpp"
 #include "DynamicArray.hpp"
+#include "CLL.hpp"
 
 void menuInitialize(Menu &menu, sf::Font &font)
 {
@@ -89,6 +90,10 @@ int main()
     // Dynamic Array menu setup
     DynamicArray DynamicMenu(textColor, consolas, featureButtonSize, sf::Color::White);
 
+    // CLL menu setup
+    CLL CircularMenu(textColor, consolas, featureButtonSize, sf::Color::White);
+
+
 
     // background image
     sf::Texture texture;
@@ -139,6 +144,7 @@ int main()
             DoublyMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 8:
+            CircularMenu.handleEvent(ev, window, screenID, featureBack);
             break;
         case 9:
             StackMenu.handleEvent(ev, window, screenID, featureBack);
