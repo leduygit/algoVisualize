@@ -44,7 +44,6 @@ void DatabaseMenu::setupDatabaseMenu(sf::Color textColor, sf::Font &font, sf::Ve
     circularLinkedListButton = Button("Circular Linked List", textColor, font, buttonSize, backgroundColor);
     stackButton = Button("Stack", textColor, font, buttonSize, backgroundColor);
     queueButton = Button("Queue", textColor, font, buttonSize, backgroundColor);
-    backButton = Button("Return", textColor, font, {100, 50}, backgroundColor);
 }
 
 
@@ -57,14 +56,11 @@ void DatabaseMenu::drawDatabaseMenu(sf::RenderWindow &window)
     circularLinkedListButton.drawButton(window);
     stackButton.drawButton(window);
     queueButton.drawButton(window);
-    backButton.drawButton(window);
 }
 
 void DatabaseMenu::setPosition(sf::Vector2f pos)
 {
-    backButton.setPosition({40, 38});
 
-    backButton.setOutlineThickness(4);
     staticArrayButton.setOutlineThickness(6);
     dynamicArrayButton.setOutlineThickness(6);
     singlyLinkedListButton.setOutlineThickness(6);
@@ -89,7 +85,6 @@ void DatabaseMenu::setPosition(sf::Vector2f pos)
 
 bool DatabaseMenu::checkMenuButton(sf::Event &ev, sf::RenderWindow &window)
 {
-    if (backButton.hoverChangeColor(ev, window)) return true;
     if (staticArrayButton.hoverChangeColor(ev, window)) return true;
     if (dynamicArrayButton.hoverChangeColor(ev, window)) return true;
     if (singlyLinkedListButton.hoverChangeColor(ev, window)) return true;
@@ -109,7 +104,6 @@ void DatabaseMenu::changeScreenID(sf::Event &ev, sf::RenderWindow &window, int &
     else if (circularLinkedListButton.isMouseOnButton(window)) screenID = 8;
     else if (stackButton.isMouseOnButton(window)) screenID = 9;
     else if (queueButton.isMouseOnButton(window)) screenID = 10;
-    else if (backButton.isMouseOnButton(window)) screenID = 1;
     return;
 }
 

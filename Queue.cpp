@@ -4,6 +4,7 @@
 Queue::Queue(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     QueueSize = 0;
+    drawSubCreate = 0;
     title.setFont(font);
     title.setString("Queue");
     title.setCharacterSize(30);

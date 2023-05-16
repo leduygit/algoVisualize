@@ -17,6 +17,7 @@ void Stack::pause_for(int pauseTime)
 Stack::Stack(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     StackSize = 0;
+    drawSubCreate = drawSubInsert = drawSubRemove = 0;
     title.setFont(font);
     title.setString("Stack");
     title.setCharacterSize(30);

@@ -16,6 +16,7 @@ void DLL::pause_for(int pauseTime)
 DLL::DLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     DLLSize = 0;
+    drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
     title.setFont(font);
     title.setString("Doubly Linked List");
     title.setCharacterSize(30);

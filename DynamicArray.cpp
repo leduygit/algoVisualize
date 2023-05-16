@@ -3,6 +3,7 @@
 DynamicArray::DynamicArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     SASize = usedSize = 0;
+    drawSubAcess = drawSubCreate = 0;
     title.setFont(font);
     title.setString("Dynamic Array");
     title.setCharacterSize(30);

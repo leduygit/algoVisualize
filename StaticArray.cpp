@@ -3,6 +3,7 @@
 StaticArray::StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     usedSize = 0;
+    drawSubAcess = drawSubCreate = 0;
     title.setFont(font);
     title.setString("Static Array");
     title.setCharacterSize(30);

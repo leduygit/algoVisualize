@@ -4,6 +4,7 @@
 SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     SLLSize = 0;
+    drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
     title.setFont(font);
     title.setString("Singly Linked List");
     title.setCharacterSize(30);

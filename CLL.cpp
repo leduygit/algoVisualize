@@ -3,6 +3,7 @@
 CLL::CLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     CLLSize = 0;
+    drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
     title.setFont(font);
     title.setString("Circular Linked List");
     title.setCharacterSize(30);
