@@ -245,6 +245,7 @@ void DynamicArray::inputFromFile(sf::RenderWindow &window, sf::Sprite &backgroun
         drawNotification(window, background);
         return;
     }
+    if (usedSize > SASize) SASize = usedSize;
     for (int i = 0; i < usedSize; ++i)
     {
         fi >> nodeVal[i];

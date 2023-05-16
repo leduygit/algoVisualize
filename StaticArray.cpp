@@ -470,6 +470,7 @@ void StaticArray::searchAnimation(sf::RenderWindow &window, sf::Sprite &backgrou
     window.display();
     pause_for(350);
     noti.setString("Not found value " + toString(inputVal));
+    drawNotification(window, background);
     return;
 }
 void StaticArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
