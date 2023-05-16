@@ -15,8 +15,8 @@ DynamicArray::DynamicArray(sf::Color textColor, sf::Font &font, sf::Vector2f but
     searchCode.setPosition({911, 643});
     delPosCode.loadTexture("Image/ArrayDelPosCode.png");
     delPosCode.setPosition({911, 666});
-    addPosCode.loadTexture("Image/ArrayAddPosCode.png");
-    addPosCode.setPosition({911, 643});
+    addPosCode.loadTexture("Image/DynamicAddPosCode.png");
+    addPosCode.setPosition({911, 620});
     updatePosCode.loadTexture("Image/ArrayUpdatePosCode.png");
     updatePosCode.setPosition({911, 712});
     accessPosCode.loadTexture("Image/ArrayAccessPosCode.png");
@@ -510,21 +510,30 @@ void DynamicArray::searchAnimation(sf::RenderWindow &window, sf::Sprite &backgro
 void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
-    if (usedSize == arrMaxSize || inputPos < 0 || inputPos > usedSize || inputPos > SASize)
+    if (SASize == arrMaxSize || inputPos < 0 || inputPos > usedSize || inputPos > SASize)
     {
         noti.setString("Out of bound");
         drawNotification(window, background);
         return;
     }
-    ++usedSize;
+
     drawWithHighlight(addPosCode, 1, window, background);
+    window.display();
+    pause_for(350);
+    if (usedSize == SASize) SASize++;
+    drawWithHighlight(addPosCode, 1, window, background);
+    window.display();
+    pause_for(350);
+
+    ++usedSize;
+    drawWithHighlight(addPosCode, 2, window, background);
     window.display();
     pause_for(350);
 
     for (int i = usedSize - 1; i >= inputPos; --i)
     {
         // for statement
-        drawWithHighlight(addPosCode, 2, window, background);
+        drawWithHighlight(addPosCode, 3, window, background);
         window.display();
         pause_for(350);
 
@@ -536,12 +545,12 @@ void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &backgro
         // change statement
         nodeVal[i] = nodeVal[i - 1];
         nodes[i].setString("");
-        drawWithHighlight(addPosCode, 3, window, background);
+        drawWithHighlight(addPosCode, 4, window, background);
         window.display();
         pause_for(350);
 
         nodes[i].setString(toString(nodeVal[i]));
-        drawWithHighlight(addPosCode, 3, window, background);
+        drawWithHighlight(addPosCode, 4, window, background);
         window.display();
         pause_for(350);
     }
@@ -549,12 +558,12 @@ void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &backgro
     nodeVal[inputPos] = inputVal;
     nodes[inputPos].setBackgroundColor(sf::Color::Green);
     nodes[inputPos].setString("");
-    drawWithHighlight(addPosCode, 4, window, background);
+    drawWithHighlight(addPosCode, 5, window, background);
     window.display();
     pause_for(350);
 
     nodes[inputPos].setString(toString(nodeVal[inputPos]));
-    drawWithHighlight(addPosCode, 4, window, background);
+    drawWithHighlight(addPosCode, 5, window, background);
     window.display();
     pause_for(350);
 
