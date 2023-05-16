@@ -17,6 +17,8 @@ DLL::DLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 {
     DLLSize = 0;
     drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
+    isInputPos = isInputVal = 0;
+
     title.setFont(font);
     title.setString("Doubly Linked List");
     title.setCharacterSize(30);
@@ -58,7 +60,6 @@ DLL::DLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     delPosCode.setPosition({911, 554});
     updatePosCode.loadTexture("Image/SLLupdatePosCode.png");
     updatePosCode.setPosition({911, 621});
-
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -164,7 +165,7 @@ void DLL::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
 {
     std::ifstream fi;
     fi.open("data.txt");
-    if (!fi.is_open()) 
+    if (!fi.is_open())
     {
         noti.setString("Can't found data.txt, please input from data.txt");
         drawNotification(window, background);
@@ -219,7 +220,6 @@ void DLL::drawArrow(sf::RenderWindow &window, int i, int j)
     // std::cout << cos(angle) << ' ' << sin(angle) << '\n';
     arrow[i].setPosition(position);
     arrow[i].setRotation(angle * 180 / 3.14);
-
 
     // window.draw(arrow[5]);
     window.draw(arrow[i]);
@@ -303,7 +303,6 @@ void DLL::handleInput(sf::RenderWindow &window, sf::Sprite &background)
         handleFeature(currInputBox, window, background);
     }
 }
-
 
 void DLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
@@ -475,7 +474,8 @@ void DLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         return;
     }
 
-    if (inputPos >= DLLSize) return;
+    if (inputPos >= DLLSize)
+        return;
 
     // set cur = head;
     nodes[0].setBackgroundColor(sf::Color::Green);
@@ -492,7 +492,8 @@ void DLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         pause_for(500);
 
         // last node
-        if (i == inputPos) break;
+        if (i == inputPos)
+            break;
 
         // jumping to next node
         nodes[i].setBackgroundColor(sf::Color::White);
@@ -509,7 +510,8 @@ void DLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         drawWithHighlight(updatePosCode, 5, -1, 0, DLLSize - 1, window, background);
         window.display();
         pause_for(500);
-        if (curData == "") break;
+        if (curData == "")
+            break;
         curData.pop_back();
         nodes[inputPos].setString(curData);
     }
@@ -1148,7 +1150,8 @@ void DLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     update.drawButton(window);
     window.draw(title);
 
-    if (isInputPos || isInputVal){
+    if (isInputPos || isInputVal)
+    {
         inputBox[currInputBox].drawTo(window);
         if (isInputPos)
             inputTitle.setString("Index: ");
@@ -1240,8 +1243,8 @@ void DLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
     mainDraw(window, background);
     bool colorNewNode = 0;
 
-    for (int i = 0; i < DLLSize; ++i) nodes[i].draw(window);
-    
+    for (int i = 0; i < DLLSize; ++i)
+        nodes[i].draw(window);
 
     for (int i = 1; i < DLLSize; ++i)
         drawArrow(window, i, i - 1);

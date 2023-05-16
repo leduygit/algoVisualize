@@ -1,10 +1,11 @@
 #include "Queue.hpp"
 
-
 Queue::Queue(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color backgroundColor)
 {
     QueueSize = 0;
     drawSubCreate = 0;
+    isInputPos = isInputVal = 0;
+
     title.setFont(font);
     title.setString("Queue");
     title.setCharacterSize(30);
@@ -37,7 +38,6 @@ Queue::Queue(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::C
     addTailCode.setPosition({911, 666});
     delHeadCode.loadTexture("Image/SLLdelHeadCode.png");
     delHeadCode.setPosition({911, 643});
-
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     insert = Button("Push", textColor, font, buttonSize, backgroundColor);
@@ -92,15 +92,13 @@ Queue::Queue(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::C
 
     // insert input box
     inputBox[2].setPosition({insert.getPos().x + 210, position.y + buttonSize.y + 5});
-
-
 }
 
 void Queue::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
 {
     std::ifstream fi;
     fi.open("data.txt");
-    if (!fi.is_open()) 
+    if (!fi.is_open())
     {
         noti.setString("Can't found data.txt, please input from data.txt");
         drawNotification(window, background);
@@ -219,7 +217,6 @@ void Queue::handleInput(sf::RenderWindow &window, sf::Sprite &background)
     }
 }
 
-
 void Queue::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
 {
     if (posHead >= QueueSize)
@@ -325,7 +322,6 @@ void Queue::delHeadAnimation(sf::RenderWindow &window, sf::Sprite &background)
     }
 }
 
-
 void Queue::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     if (QueueSize >= 10)
@@ -413,7 +409,6 @@ void Queue::addTailAnimation(sf::RenderWindow &window, sf::Sprite &background)
     nodes[QueueSize - 1].setBackgroundColor(sf::Color::White);
 }
 
-
 void Queue::drawNotification(sf::RenderWindow &window, sf::Sprite &background)
 {
 
@@ -445,7 +440,8 @@ void Queue::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     remove.drawButton(window);
     window.draw(title);
 
-    if (isInputPos || isInputVal){
+    if (isInputPos || isInputVal)
+    {
         inputBox[currInputBox].drawTo(window);
         if (isInputPos)
             inputTitle.setString("Index: ");
@@ -525,8 +521,8 @@ void Queue::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, 
     mainDraw(window, background);
     bool colorNewNode = 0;
 
-    for (int i = 0; i < QueueSize; ++i) nodes[i].draw(window);
-    
+    for (int i = 0; i < QueueSize; ++i)
+        nodes[i].draw(window);
 
     for (int i = 1; i < QueueSize; ++i)
         drawArrow(window, i, i - 1);

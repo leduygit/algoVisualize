@@ -1,6 +1,5 @@
 #include "Stack.hpp"
 
-
 void Stack::pause_for(int pauseTime)
 {
     std::chrono::milliseconds duration = std::chrono::milliseconds(pauseTime);
@@ -18,6 +17,8 @@ Stack::Stack(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::C
 {
     StackSize = 0;
     drawSubCreate = drawSubInsert = drawSubRemove = 0;
+    isInputPos = isInputVal = 0;
+
     title.setFont(font);
     title.setString("Stack");
     title.setCharacterSize(30);
@@ -50,7 +51,6 @@ Stack::Stack(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::C
     addHeadCode.setPosition({911, 666});
     delHeadCode.loadTexture("Image/SLLdelHeadCode.png");
     delHeadCode.setPosition({911, 643});
-
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     insert = Button("Push", textColor, font, buttonSize, backgroundColor);
@@ -108,14 +108,13 @@ Stack::Stack(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::C
 
     // remove input box
     inputBox[5].setPosition({subInsertButton[2].getPos().x + 100, position.y + 4 * buttonSize.y + 5});
-
 }
 
 void Stack::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
 {
     std::ifstream fi;
     fi.open("data.txt");
-    if (!fi.is_open()) 
+    if (!fi.is_open())
     {
         noti.setString("Can't found data.txt, please input from data.txt");
         drawNotification(window, background);
@@ -233,7 +232,6 @@ void Stack::handleInput(sf::RenderWindow &window, sf::Sprite &background)
         handleFeature(currInputBox, window, background);
     }
 }
-
 
 void Stack::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
 {
@@ -465,7 +463,8 @@ void Stack::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     remove.drawButton(window);
     window.draw(title);
 
-    if (isInputPos || isInputVal){
+    if (isInputPos || isInputVal)
+    {
         inputBox[currInputBox].drawTo(window);
         if (isInputPos)
             inputTitle.setString("Index: ");
@@ -553,8 +552,8 @@ void Stack::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, 
     mainDraw(window, background);
     bool colorNewNode = 0;
 
-    for (int i = 0; i < StackSize; ++i) nodes[i].draw(window);
-    
+    for (int i = 0; i < StackSize; ++i)
+        nodes[i].draw(window);
 
     for (int i = 1; i < StackSize; ++i)
         drawArrow(window, i, i - 1);

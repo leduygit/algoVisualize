@@ -4,6 +4,8 @@ DynamicArray::DynamicArray(sf::Color textColor, sf::Font &font, sf::Vector2f but
 {
     SASize = usedSize = 0;
     drawSubAcess = drawSubCreate = 0;
+    isInputPos = isInputVal = 0;
+
     title.setFont(font);
     title.setString("Dynamic Array");
     title.setCharacterSize(30);
@@ -257,7 +259,7 @@ void DynamicArray::inputFromFile(sf::RenderWindow &window, sf::Sprite &backgroun
     }
     for (int i = usedSize; i < SASize; ++i)
         nodes[i].setString("0");
-        
+
     fi.close();
 }
 
@@ -521,7 +523,8 @@ void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &backgro
     drawWithHighlight(addPosCode, 1, window, background);
     window.display();
     pause_for(350);
-    if (usedSize == SASize) SASize++;
+    if (usedSize == SASize)
+        SASize++;
     drawWithHighlight(addPosCode, 1, window, background);
     window.display();
     pause_for(350);
@@ -573,7 +576,8 @@ void DynamicArray::addPosAnimation(sf::RenderWindow &window, sf::Sprite &backgro
 void DynamicArray::delPosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
     --inputPos;
-    if (inputPos >= usedSize || inputPos < 0){
+    if (inputPos >= usedSize || inputPos < 0)
+    {
         noti.setString("Out of bound");
         drawNotification(window, background);
         return;

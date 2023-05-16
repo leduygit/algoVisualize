@@ -4,6 +4,7 @@ StaticArray::StaticArray(sf::Color textColor, sf::Font &font, sf::Vector2f butto
 {
     usedSize = 0;
     drawSubAcess = drawSubCreate = 0;
+    isInputPos = isInputVal = 0;
     title.setFont(font);
     title.setString("Static Array");
     title.setCharacterSize(30);

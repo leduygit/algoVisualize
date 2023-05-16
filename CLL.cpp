@@ -4,6 +4,8 @@ CLL::CLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 {
     CLLSize = 0;
     drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
+    isInputPos = isInputVal = 0;
+
     title.setFont(font);
     title.setString("Circular Linked List");
     title.setCharacterSize(30);
@@ -44,7 +46,6 @@ CLL::CLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
     delPosCode.setPosition({911, 554});
     updatePosCode.loadTexture("Image/SLLupdatePosCode.png");
     updatePosCode.setPosition({911, 621});
-
 
     create = Button("Create", textColor, font, buttonSize, backgroundColor);
     search = Button("Search", textColor, font, buttonSize, backgroundColor);
@@ -150,7 +151,7 @@ void CLL::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
 {
     std::ifstream fi;
     fi.open("data.txt");
-    if (!fi.is_open()) 
+    if (!fi.is_open())
     {
         noti.setString("Can't found data.txt, please input from data.txt");
         drawNotification(window, background);
@@ -284,7 +285,6 @@ void CLL::handleInput(sf::RenderWindow &window, sf::Sprite &background)
         handleFeature(currInputBox, window, background);
     }
 }
-
 
 void CLL::searchAnimation(sf::RenderWindow &window, sf::Sprite &background)
 {
@@ -456,7 +456,8 @@ void CLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         return;
     }
 
-    if (inputPos >= CLLSize) return;
+    if (inputPos >= CLLSize)
+        return;
 
     // set cur = head;
     nodes[0].setBackgroundColor(sf::Color::Green);
@@ -473,7 +474,8 @@ void CLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         pause_for(500);
 
         // last node
-        if (i == inputPos) break;
+        if (i == inputPos)
+            break;
 
         // jumping to next node
         nodes[i].setBackgroundColor(sf::Color::White);
@@ -490,7 +492,8 @@ void CLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
         drawWithHighlight(updatePosCode, 5, -1, 0, CLLSize - 1, window, background);
         window.display();
         pause_for(500);
-        if (curData == "") break;
+        if (curData == "")
+            break;
         curData.pop_back();
         nodes[inputPos].setString(curData);
     }
@@ -513,7 +516,8 @@ void CLL::updatePosAnimation(sf::RenderWindow &window, sf::Sprite &background)
 
 void CLL::drawCircularArrow(sf::RenderWindow &window, int posHead, int posTail)
 {
-    if (posHead != 0 || posTail != CLLSize - 1) return;
+    if (posHead != 0 || posTail != CLLSize - 1)
+        return;
     sf::RectangleShape rect;
 
     // mui ten di sang ngang
@@ -543,7 +547,6 @@ void CLL::drawCircularArrow(sf::RenderWindow &window, int posHead, int posTail)
     rect.setSize({tailPos.x + 73 - headPos.x + 5, 10});
     rect.setPosition({headPos.x - 5, headPos.y + 155});
     window.draw(rect);
-
 }
 
 void CLL::drawingHeadTailText(sf::RenderWindow &window, int posHead, int posTail)
@@ -1161,7 +1164,8 @@ void CLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
     update.drawButton(window);
     window.draw(title);
 
-    if (isInputPos || isInputVal){
+    if (isInputPos || isInputVal)
+    {
         inputBox[currInputBox].drawTo(window);
         if (isInputPos)
             inputTitle.setString("Index: ");
@@ -1252,8 +1256,8 @@ void CLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf
 
     mainDraw(window, background);
 
-    for (int i = 0; i < CLLSize; ++i) nodes[i].draw(window);
-    
+    for (int i = 0; i < CLLSize; ++i)
+        nodes[i].draw(window);
 
     for (int i = 1; i < CLLSize; ++i)
         drawArrow(window, i, i - 1);

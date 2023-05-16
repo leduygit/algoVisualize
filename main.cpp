@@ -11,13 +11,13 @@
 #include "DynamicArray.hpp"
 #include "CLL.hpp"
 
-SLL *SinglyMenu;
-Stack *StackMenu;
-Queue *queueMenu;
-DLL *DoublyMenu;
-StaticArray *StaticMenu;
-DynamicArray *DynamicMenu;
-CLL *CircularMenu;
+SLL *SinglyMenu = nullptr;
+Stack *StackMenu = nullptr;
+Queue *queueMenu = nullptr;
+DLL *DoublyMenu = nullptr;
+StaticArray *StaticMenu = nullptr;
+DynamicArray *DynamicMenu = nullptr;
+CLL *CircularMenu = nullptr;
 
 sf::Texture texture;
 sf::Sprite background;
@@ -90,21 +90,22 @@ void changeScreen(int oldID, int newID)
         delete queueMenu;
         queueMenu = nullptr;
     }
-
+    
     if (newID == 4)
         StaticMenu = new StaticArray(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 5)
+    if (newID == 5)
         DynamicMenu = new DynamicArray(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 6)
+    if (newID == 6)
         SinglyMenu = new SLL(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 7)
+    if (newID == 7)
         DoublyMenu = new DLL(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 8)
+    if (newID == 8)
         CircularMenu = new CLL(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 9)
+    if (newID == 9)
         StackMenu = new Stack(textColor, consolas, featureButtonSize, sf::Color::White);
-    else if (newID == 10)
+    if (newID == 10)
         queueMenu = new Queue(textColor, consolas, featureButtonSize, sf::Color::White);
+    
 }
 
 
@@ -143,27 +144,6 @@ int main()
 
     // SLL menu setup
     featureButtonSize = {100, 50};
-    // SinglyMenu = new SLL(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // Stack menu setup
-    // StackMenu = new Stack(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // Queue menu setup
-    // queueMenu = new Queue(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // DLL menu setup
-    // DoublyMenu = new DLL(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // Static Array menu setup
-    // StaticMenu = new StaticArray(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // Dynamic Array menu setup
-    // DynamicMenu = new DynamicArray(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // // CLL menu setup
-    // CircularMenu = new CLL(textColor, consolas, featureButtonSize, sf::Color::White);
-
-    // background image
 
     texture.loadFromFile("Image/background.png");
     background.setTexture(texture);
@@ -182,45 +162,33 @@ int main()
 
         switch (screenID)
         {
-        case 1:
-            menu.handleEvent(ev, window, screenID, background);
-            changeScreen(1, screenID);
-            break;
         case 2:
             dataMenu.handleEvent(ev, window, screenID, background);
             changeScreen(2, screenID);
             break;
-        case 3:
-            break;
         case 4:
             StaticMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(4, screenID);
-
             break;
         case 5:
             DynamicMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(5, screenID);
-
             break;
         case 6:
             SinglyMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(6, screenID);
-
             break;
         case 7:
             DoublyMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(7, screenID);
-
             break;
         case 8:
             CircularMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(8, screenID);
-
             break;
         case 9:
             StackMenu->handleEvent(ev, window, screenID, featureBack);
             changeScreen(9, screenID);
-
             break;
         case 10:
             queueMenu->handleEvent(ev, window, screenID, featureBack);

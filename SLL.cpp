@@ -5,6 +5,7 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 {
     SLLSize = 0;
     drawSubCreate = drawSubInsert = drawSubRemove = drawSubSearch = 0;
+    isInputPos = isInputVal = 0;
     title.setFont(font);
     title.setString("Singly Linked List");
     title.setCharacterSize(30);
@@ -145,6 +146,7 @@ SLL::SLL(sf::Color textColor, sf::Font &font, sf::Vector2f buttonSize, sf::Color
 
     // update input box
     inputBox[6].setPosition({update.getPos().x + 210, position.y + 4 * buttonSize.y + 15});
+
 }
 
 void SLL::inputFromFile(sf::RenderWindow &window, sf::Sprite &background)
@@ -1155,11 +1157,6 @@ void SLL::mainDraw(sf::RenderWindow &window, sf::Sprite &background)
 
 void SLL::handleEvent(sf::Event &ev, sf::RenderWindow &window, int &screenID, sf::Sprite &background)
 {
-    sf::Clock clock;
-    // textbox testing
-
-    float currTime = 0.f;
-
     if (isInputPos || isInputVal)
     {
         while (window.pollEvent(ev))
